@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog - Ek Blink Solutions</title>
   <meta name="description" content="Ideas, insights, and stories from the team at Ek Blink Solutions - XR, fintech, design, and technology.">
@@ -177,6 +181,16 @@
       .blog-grid{grid-template-columns:1fr}
       .blog-hero-h1{font-size:clamp(2.4rem,11vw,4rem)}
     }
+
+    /* ── Page skeleton ── */
+    #page-skeleton{position:fixed;inset:0;z-index:99985;background:#050505;pointer-events:none;transition:opacity .55s ease;opacity:0}
+    #page-skeleton.sk-out{opacity:0}
+    .sk-bar{background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 100%);background-size:200% 100%;animation:sk-shimmer 1.5s ease-in-out infinite;border-radius:3px}
+    @keyframes sk-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    @media(max-width:580px){
+      #blog-section{padding:2.5rem 1.5rem 4rem}
+    }
   </style>
 </head>
 <body>
@@ -209,6 +223,19 @@
     <a href="about.html" class="drop-link">About</a>
     <a href="blog.html" class="drop-link">Blog</a>
     <a href="contact.html" class="drop-link">Contact</a>
+  </div>
+</div>
+<div id="page-skeleton" aria-hidden="true">
+  <div style="position:absolute;top:calc(var(--nav-h,72px) + 12%);left:2rem;right:2rem;max-width:900px">
+    <div class="sk-bar" style="height:3px;width:100px;margin-bottom:3rem;opacity:.4"></div>
+    <div class="sk-bar" style="height:clamp(2.4rem,7vw,5rem);width:84%;margin-bottom:.9rem"></div>
+    <div class="sk-bar" style="height:clamp(2.4rem,7vw,5rem);width:66%;margin-bottom:2.25rem"></div>
+    <div class="sk-bar" style="height:.95rem;width:50%;margin-bottom:.55rem;opacity:.45"></div>
+    <div class="sk-bar" style="height:.95rem;width:38%;margin-bottom:2.25rem;opacity:.45"></div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <div class="sk-bar" style="height:2.6rem;width:148px;border-radius:24px"></div>
+      <div class="sk-bar" style="height:2.6rem;width:130px;border-radius:24px;opacity:.4"></div>
+    </div>
   </div>
 </div>
 
@@ -312,6 +339,9 @@ setTimeout(()=>{
   ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()});
   document.querySelectorAll('.nav-logo,.nav-link,.hamburger,#hero-h1,#hero-sub').forEach(el=>{el.style.opacity='1';el.style.transform='none'});
 },2000);
+
+// ── Page skeleton fade ──────────────────────────────────────────────────────
+(()=>{const sk=document.getElementById('page-skeleton');if(!sk)return;if(performance.now()>700){sk.style.opacity='1'}new MutationObserver((_,obs)=>{if(!document.getElementById('blink-top')){sk.style.opacity='0';setTimeout(()=>sk.remove(),550);obs.disconnect()}}).observe(document.body,{childList:true,subtree:true})})();
 
 // ── 2. Async Lenis ────────────────────────────────────────────────────────
 (function(){
