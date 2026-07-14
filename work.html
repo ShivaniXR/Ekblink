@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Work - Ek Blink Solutions</title>
+  <meta name="description" content="Portfolio of Ek Blink Solutions - fintech products, publishing platforms, VR experiences, ecommerce, brand identity, and app development.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    img,svg{display:block;max-width:100%}
+    :root{
+      --bg:#050505;--surface:#0D0D0D;--border:#1E1E1E;--text:#F0EBE1;--dim:#555;
+      --lime:#C3FF00;--electric:#3355FF;--violet:#8B5CF6;--coral:#FF4D4D;
+      --cyan:#00D4FF;--pink:#FF2D87;--orange:#FF9500;--teal:#00D68F;
+      --nav-h:72px;--ease:cubic-bezier(0.22,1,0.36,1);
+    }
+
+    /* ── Cursor ── */
+    *{cursor:none}
+    #cursor{position:fixed;top:0;left:0;width:12px;height:12px;background:var(--lime);border-radius:50%;border:1.5px solid transparent;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),background .2s,border-color .2s;will-change:left,top}
+    #cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
+    @media(hover:none){#cursor{display:none}*{cursor:auto}}
+
+    /* ── Blink lids ── */
+    .blink-lid{position:fixed;left:0;width:100%;height:70vh;z-index:99990;pointer-events:none;display:block}
+    #blink-top{top:0}
+    #blink-bottom{bottom:0}
+    #blink-logo-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99991;pointer-events:none}
+    #blink-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1rem,2vw,1.45rem);letter-spacing:-.02em;color:#F0EBE1;opacity:0;user-select:none;pointer-events:none;white-space:nowrap}
+    #blink-logo .bl{color:#C3FF00}
+
+    /* ── Navbar ── */
+    #navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;transition:background .4s,border-color .4s}
+    #navbar.scrolled{background:rgba(5,5,5,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
+    .nav-logo span{color:var(--lime)}
+    .nav-logo-img{height:34px;width:auto;display:block}
+    .nav-links{display:flex;align-items:center;gap:2.5rem}
+    .nav-link{font-size:.85rem;color:var(--dim);transition:color .25s;position:relative}
+    .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--lime);transition:width .3s var(--ease)}
+    .nav-link:hover{color:var(--text)}.nav-link:hover::after,.nav-link.active::after{width:100%}
+    .nav-link.active{color:var(--lime)}
+    .hamburger{width:46px;height:46px;border:1px solid var(--border);border-radius:50%;background:transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;position:relative;overflow:hidden}
+    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0;right:0;background:var(--lime);z-index:0;transition:transform .3s var(--ease)}
+    .hamburger::before{top:0;height:51%;transform:scaleY(0);transform-origin:top}
+    .hamburger::after{bottom:0;height:51%;transform:scaleY(0);transform-origin:bottom}
+    .hamburger:hover::before,.hamburger:hover::after{transform:scaleY(1)}
+    .ham-line{width:18px;height:1.5px;background:var(--text);border-radius:1px;display:block;position:relative;z-index:1;transition:transform .35s var(--ease),opacity .25s,background .3s}
+    .hamburger:hover .ham-line{background:#050505}
+    .hamburger.open .ham-line:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+    .hamburger.open .ham-line:nth-child(2){opacity:0;transform:scaleX(0)}
+    .hamburger.open .ham-line:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+    #nav-drop{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(5,5,5,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);z-index:800;clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease)}
+    #nav-drop.open{clip-path:inset(0 0 0% 0)}
+    .nav-drop-inner{padding:1.5rem 2rem;display:flex;flex-direction:column}
+    .drop-link{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-.02em;color:rgba(240,235,225,.45);padding:.65rem 1rem;border-bottom:1px solid var(--border);transition:color .2s,background .25s var(--ease),padding-left .3s var(--ease)}
+    .drop-link:first-child{border-top:1px solid var(--border)}
+    .drop-link:hover{color:#050505;background:var(--lime);padding-left:2rem}
+
+    /* ── Hero ── */
+    #work-hero{position:relative;min-height:78vh;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--border)}
+    #work-hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+    .hero-inner{position:relative;z-index:2;padding:0 2rem;max-width:1200px;margin:0 auto;width:100%;padding-top:var(--nav-h)}
+    .hero-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.6rem,5.5vw,5.5rem);letter-spacing:-.04em;line-height:.88;margin-bottom:2.5rem;text-wrap:balance}
+    .hero-h1 em{font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--lime)}
+    .hero-sub-row{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+    .hero-sub{font-size:clamp(.9rem,1.4vw,1.05rem);color:var(--dim);max-width:52ch;line-height:1.75;font-weight:300}
+    .hero-count{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,3.5vw,3.8rem);letter-spacing:-.04em;line-height:1;white-space:nowrap;opacity:.25}
+    .hero-count span{display:block;font-size:.4em;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-family:'DM Sans',sans-serif;margin-top:.2em}
+
+    /* ── Work items ── */
+    .wp-item{border-top:1px solid var(--border);padding:6rem 2rem;position:relative;overflow:hidden}
+    .wp-item:last-child{border-bottom:1px solid var(--border);margin-bottom:0}
+    .wp-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:center;position:relative;z-index:2}
+    .wp-item.flip .wp-logo-panel{order:2}
+    .wp-item.flip .wp-info{order:1}
+
+    /* Ghost watermark - hidden */
+    .wp-ghost{display:none}
+
+    /* Logo panel */
+    .wp-logo-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px;gap:.9rem;text-decoration:none;border:1.5px solid transparent;border-radius:16px;padding:2rem;transition:border-color .35s var(--ease),box-shadow .35s var(--ease)}
+    a.wp-logo-panel:hover,.wp-logo-panel:hover{border-color:var(--lime);box-shadow:0 0 28px rgba(195,255,0,.12),inset 0 0 20px rgba(195,255,0,.04)}
+    .wp-logo{max-width:380px;max-height:220px;object-fit:contain;transition:transform .35s var(--ease)}
+    a.wp-logo-panel:hover .wp-logo{transform:scale(1.05)}
+
+    /* ── Filters dropdown ── */
+    #work-filter-bar{padding:1.75rem 2rem;max-width:1200px;margin:0 auto}
+    .wf-select-wrap{position:relative;display:inline-flex;align-items:center}
+    .wf-select-wrap select{appearance:none;-webkit-appearance:none;background:transparent;border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 2.6rem .55rem 1.1rem;border-radius:100px;cursor:none;transition:border-color .25s,color .25s;outline:none}
+    .wf-select-wrap select:hover,.wf-select-wrap select:focus{border-color:rgba(240,235,225,.4)}
+    .wf-select-wrap select option{background:#0D0D0D;color:var(--text);text-transform:uppercase;font-size:.8rem}
+    .wf-select-wrap .wf-chevron{position:absolute;right:.85rem;pointer-events:none;color:var(--dim)}
+    .wp-url-badge{display:none}
+    .wp-logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-.03em;color:rgba(240,235,225,.35);text-align:center;line-height:1.1}
+    .wp-logo-text .acc{color:var(--acc);opacity:.8}
+
+    /* Info column */
+    .wp-info{display:flex;flex-direction:column}
+    .wp-meta{display:flex;align-items:center;gap:.65rem;margin-bottom:1.4rem;flex-wrap:wrap}
+    .wp-num{font-size:.7rem;font-weight:400;letter-spacing:.16em;color:var(--dim);font-family:'DM Sans',sans-serif}
+    .wp-tag{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.26rem .7rem;border-radius:100px;border:1px solid}
+    .wp-tag.client{color:var(--lime);border-color:rgba(195,255,0,.3);background:rgba(195,255,0,.05)}
+    .wp-tag.product{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 40%,transparent);background:color-mix(in srgb,var(--acc) 8%,transparent)}
+    .wp-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,3.8vw,3.5rem);letter-spacing:-.035em;line-height:.95;margin-bottom:1.3rem}
+    .wp-desc{font-size:.97rem;color:rgba(240,235,225,.5);line-height:1.8;font-weight:300;margin-bottom:1.8rem;max-width:42ch;transition:color .35s}
+    .wp-item:hover .wp-desc{color:rgba(240,235,225,.65)}
+    .wp-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:2rem}
+    .wp-chip{font-size:.7rem;font-weight:400;letter-spacing:.05em;padding:.26rem .65rem;border:1px solid var(--border);border-radius:100px;color:var(--dim);transition:border-color .3s,color .3s}
+    .wp-item:hover .wp-chip{border-color:color-mix(in srgb,var(--acc) 35%,var(--border));color:rgba(240,235,225,.6)}
+    .wp-link{display:inline-flex;align-items:center;gap:.45rem;font-size:.88rem;font-weight:500;color:var(--acc);transition:gap .25s var(--ease)}
+    .wp-link:hover{gap:.85rem}
+    .wp-coming{display:inline-flex;align-items:center;gap:.45rem;font-size:.85rem;color:var(--dim);font-weight:300;font-style:italic}
+
+    /* ── CTA ── */
+    #contact-cta{border-top:1px solid var(--border);position:relative;overflow:hidden}
+    .cta-blob{position:absolute;width:700px;height:700px;border-radius:50%;background:var(--lime);filter:blur(160px);opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+    .cta-inner{max-width:1200px;margin:0 auto;padding:9rem 2rem;text-align:center;position:relative;z-index:2}
+    .cta-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5.5vw,4.8rem);letter-spacing:-.03em;line-height:1;margin-bottom:1.5rem}
+    .cta-sub{font-size:1rem;color:var(--dim);max-width:50ch;margin:0 auto 3rem;line-height:1.7;font-weight:300}
+    .cta-actions{display:flex;justify-content:center;align-items:center;gap:1.25rem;flex-wrap:wrap}
+    .btn-cta{display:inline-flex;align-items:center;gap:.5rem;background:var(--lime);color:#050505;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:-.01em;padding:1rem 2.5rem;border-radius:100px;transition:transform .2s var(--ease),box-shadow .2s}
+    .btn-cta:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(195,255,0,.3)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--border);color:var(--text);font-size:.9rem;padding:.85rem 2rem;border-radius:100px;transition:border-color .2s}
+    .btn-ghost:hover{border-color:rgba(240,235,225,.5)}
+
+    /* ── Footer ── */
+    footer{border-top:1px solid var(--border);padding:5rem 2rem 3rem;max-width:1200px;margin:0 auto}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em;margin-bottom:1rem}
+    .footer-logo span{color:var(--lime)}
+    .footer-tagline{font-size:.85rem;color:var(--dim);line-height:1.65;max-width:28ch;font-weight:300}
+    .footer-col-title{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:1.5rem}
+    .footer-links{display:flex;flex-direction:column;gap:.7rem}
+    .footer-link{font-size:.88rem;color:rgba(240,235,225,.55);transition:color .2s;font-weight:300}
+    .footer-link:hover{color:var(--text)}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border)}
+    .footer-copy{font-size:.75rem;color:var(--dim)}
+
+    
+      .wp-item.flip .wp-logo-panel{order:0}
+      .wp-item.flip .wp-info{order:0}
+      .wp-ghost{font-size:35vw}
+      .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
+      .nav-links{display:none}
+    }
+    
+      .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
+      .hero-sub-row{flex-direction:column;gap:1.5rem}
+    }}
+  
+    /* ── Social rail (sidebar) ── */
+    /* ── Footer socials ── */
+  
+    /* ── Footer social stage (physics) ── */
+    #social-stage{position:relative;height:200px;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .social-icon{position:absolute;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#666;will-change:left,top;z-index:10;opacity:0;transition:background .25s,border-color .25s,color .25s}
+    .social-icon:hover{background:rgba(255,255,255,.08);border-color:var(--si-color,var(--lime));color:var(--si-color,var(--lime))}
+    .social-icon:hover .si-inner{transform:scale(1.1)}
+    .si-inner{transition:transform .15s var(--ease);pointer-events:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+    .social-icon svg{width:22px;height:22px;pointer-events:none}
+    .stage-label{position:absolute;top:.75rem;left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,235,225,.12);font-weight:500;white-space:nowrap;pointer-events:none;user-select:none}
+  
+    .footer-legal{display:flex;align-items:center;gap:.75rem}
+    .footer-legal-link{font-size:.75rem;color:var(--dim);transition:color .2s}
+    .footer-legal-link:hover{color:var(--text)}
+    .footer-legal-sep{color:var(--dim);opacity:.35;font-size:.75rem}
+  
+    /* ─── Responsive: shared ─── */
+    @media(max-width:960px){
+      .nav-links{display:none}
+    }
+    @media(max-width:600px){
+      footer{padding:3.5rem 1.5rem 2rem}
+      .footer-grid{grid-template-columns:1fr!important;gap:2.5rem}
+      .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    @media(max-width:960px){
+      .wp-inner{grid-template-columns:1fr;gap:2.5rem}
+      .wp-item.flip .wp-logo-panel{order:0}
+      .wp-item.flip .wp-info{order:0}
+      .wp-ghost{font-size:35vw}
+    }
+    @media(max-width:600px){
+      .section{padding:5rem 1.5rem}
+      .wp-item{padding:4rem 1.5rem}
+      .hero-sub-row{flex-direction:column;gap:1.5rem}
+      #work-hero{padding:calc(var(--nav-h)+2.5rem) 1.5rem 3.5rem}
+      .wp-tags{flex-wrap:wrap}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Blink lids -->
+<svg id="blink-top" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 0 H 100 V 100 A 50 28.6 0 0 0 0 100 Z" fill="#1c1c1c"/></svg>
+<svg id="blink-bottom" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 100 H 100 V 0 A 50 28.6 0 0 1 0 0 Z" fill="#1c1c1c"/></svg>
+<div id="blink-logo-wrap" aria-hidden="true"><span id="blink-logo">Ek Blink<span class="bl">.</span></span></div>
+<div id="cursor" aria-hidden="true"></div>
+<!-- Social rail -->
+
+<nav id="navbar" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Ek Blink Solutions" class="nav-logo-img"></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <a href="work.html" class="nav-link active">Work</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+  </button>
+</nav>
+<div id="nav-drop" aria-hidden="true">
+  <div class="nav-drop-inner">
+    <a href="index.html" class="drop-link">Home</a>
+    <a href="services.html" class="drop-link">Services</a>
+    <a href="work.html" class="drop-link">Work</a>
+    <a href="about.html" class="drop-link">About</a>
+    <a href="blog.html" class="drop-link">Blog</a>
+    <a href="contact.html" class="drop-link">Contact</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<section id="work-hero">
+  <canvas id="work-hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <h1 class="hero-h1">What we've <em>built.</em></h1>
+    <p class="hero-sub" id="hero-sub">Fintech products, immersive art experiences, publishing platforms, VR, ecommerce, and apps - all designed and built in-house.</p>
+  </div>
+</section>
+
+<!-- Filters -->
+<div id="work-filter-bar">
+  <div class="wf-select-wrap">
+    <select id="work-filter-select" aria-label="Filter projects">
+      <option value="all">All Work</option>
+      <option value="client">Client Work</option>
+      <option value="product">Our Products</option>
+      <option value="website">Websites</option>
+      <option value="immersive">Immersive</option>
+      <option value="logo-design">Logo Design</option>
+      <option value="brand-identity">Brand Identity</option>
+      <option value="fintech">Fintech</option>
+    </select>
+    <svg class="wf-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<!-- Work list -->
+<div id="work-list">
+
+  <!-- Dream Voyage 360 -->
+  <div class="wp-item" id="proj-dv360" style="--acc: #C3FF00" data-tags="client website logo-design brand-identity immersive">
+    <div class="wp-ghost" aria-hidden="true">01</div>
+    <div class="wp-inner">
+      <a class="wp-logo-panel" href="https://dreamvoyage360.com" target="_blank" rel="noopener" aria-label="Visit Dream Voyage 360">
+        <img src="client logos/dreamvoyage360.png" alt="Dream Voyage 360" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Dream Voyage<span class="acc"> 360</span></div>
+        <span class="wp-url-badge">dreamvoyage360.com</span>
+      </a>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag client">Client</span></div>
+        <h2 class="wp-name">Dream Voyage 360</h2>
+        <p class="wp-desc">The UK's first VR kiosk and creator ecosystem, placing self-serving immersion stations in malls, airports, and transit hubs. We built the full website and created the visual identity - logo, brand system, and all design assets.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Website Design</span>
+          <span class="wp-chip">Logo Design</span>
+          <span class="wp-chip">Brand Identity</span>
+          <span class="wp-chip">VR / Immersive</span>
+        </div>
+        <a href="https://dreamvoyage360.com" class="wp-link" target="_blank" rel="noopener">Visit site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resonant Morphologies / Sanctuary of Creation -->
+  <div class="wp-item flip" id="proj-soc" style="--acc: #C3FF00" data-tags="client immersive video audio">
+    <div class="wp-ghost" aria-hidden="true">02</div>
+    <div class="wp-inner">
+      <a class="wp-logo-panel" href="https://www.sanctuaryofcreation.co.uk" target="_blank" rel="noopener" aria-label="Visit Sanctuary of Creation">
+        <img src="https://images.squarespace-cdn.com/content/v1/67b90361cb4968452d505a91/7a007332-2051-4161-8e18-b2c2310c61a9/NEW+SOC+LOGO.png?format=1500w" alt="Sanctuary of Creation" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Sanctuary of<span class="acc"> Creation</span></div>
+        <span class="wp-url-badge">sanctuaryofcreation.co.uk</span>
+      </a>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag client">Client</span></div>
+        <h2 class="wp-name">Resonant Morphologies</h2>
+        <p class="wp-desc">For Sanctuary of Creation's immersive art event at Bucks Open Weekend 2025 - supported by Bucks Culture and the Rothschild Foundation - we produced the looping immersive video content and bespoke binaural audio. The installation transformed the exhibition space into a living field of light, frequency, and form, inviting viewers into a meditative encounter with visual sculptures and enveloping sound.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Immersive Video</span>
+          <span class="wp-chip">Binaural Audio</span>
+          <span class="wp-chip">Video Editing</span>
+          <span class="wp-chip">Post-Production</span>
+          <span class="wp-chip">360 / Projection</span>
+        </div>
+        <a href="https://www.sanctuaryofcreation.co.uk/events/event-one-yzpwg" class="wp-link" target="_blank" rel="noopener">View event <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Between the Lines -->
+  <div class="wp-item" id="proj-btl" style="--acc: #C3FF00" data-tags="client website brand-identity">
+    <div class="wp-ghost" aria-hidden="true">03</div>
+    <div class="wp-inner">
+
+      <a class="wp-logo-panel" href="https://betweenthelines.space" target="_blank" rel="noopener" aria-label="Visit Between the Lines">
+        <img
+          src="client logos/Between the Lines logo.png"
+          alt="Between the Lines"
+          class="wp-logo"
+          onerror="this.src='https://betweenthelines.space/assets/img/btl_logo_light.png';this.onerror=function(){this.style.display='none';this.nextElementSibling.style.display='block'}"
+        >
+        <div class="wp-logo-text" style="display:none">Between the <span class="acc">Lines</span></div>
+        <span class="wp-url-badge">betweenthelines.space</span>
+      </a>
+
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag client">Client</span></div>
+        <h2 class="wp-name">Between the Lines</h2>
+        <p class="wp-desc">A psychology-adjacent publishing platform for essays, reflections, and book series by SS Kot. We built the full website and designed cover art for all 12 books in the series.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Website Design</span>
+          <span class="wp-chip">Book Cover Design</span>
+          <span class="wp-chip">12-Book Series</span>
+          <span class="wp-chip">Brand Identity</span>
+        </div>
+        <a href="https://betweenthelines.space" class="wp-link" target="_blank" rel="noopener">Visit site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fresh Crunch -->
+  <div class="wp-item flip" id="proj-freshcrunch" style="--acc: #C3FF00" data-tags="client website brand-identity ecommerce">
+    <div class="wp-ghost" aria-hidden="true">04</div>
+    <div class="wp-inner">
+      <a class="wp-logo-panel" href="https://freshcrunch.co.uk" target="_blank" rel="noopener" aria-label="Visit Fresh Crunch">
+        <img src="client logos/FreshCrunch logo.png" alt="Fresh Crunch" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Fresh<span class="acc">Crunch</span></div>
+        <span class="wp-url-badge">freshcrunch.co.uk</span>
+      </a>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag client">Client</span></div>
+        <h2 class="wp-name">Fresh Crunch</h2>
+        <p class="wp-desc">Caramelised fruit skewers and chocolate-dipped fruits, launching across Warwickshire. We built the full Shopify ecommerce store and handled the graphic design - packaging, branding, and digital assets.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Ecommerce</span>
+          <span class="wp-chip">Shopify</span>
+          <span class="wp-chip">Graphic Design</span>
+          <span class="wp-chip">Brand Identity</span>
+        </div>
+        <a href="https://freshcrunch.co.uk" class="wp-link" target="_blank" rel="noopener">Visit site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- WealthON -->
+  <div class="wp-item" id="proj-wealthon" style="--acc: #C3FF00" data-tags="product website fintech">
+    <div class="wp-ghost" aria-hidden="true">05</div>
+    <div class="wp-inner">
+      <a class="wp-logo-panel" href="https://www.wealthon.cloud" target="_blank" rel="noopener" aria-label="Visit WealthON">
+        <img src="client logos/WealthON logo.png" alt="WealthON" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Wealth<span class="acc">ON</span></div>
+        <span class="wp-url-badge">wealthon.cloud</span>
+      </a>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag product">Our product</span></div>
+        <h2 class="wp-name">WealthON</h2>
+        <p class="wp-desc">A global wealth tracker built for Non-Resident Indians managing money across the UK and India. One dashboard. Both countries. Live exchange rates, smart statement import, and full NRO/Schedule FA awareness.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Web App</span>
+          <span class="wp-chip">Fintech</span>
+          <span class="wp-chip">NRI Finance</span>
+          <span class="wp-chip">Next.js</span>
+        </div>
+        <a href="https://www.wealthon.cloud" class="wp-link" target="_blank" rel="noopener">Visit site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- WealthNap -->
+  <div class="wp-item flip" id="proj-wealthnap" style="--acc: #C3FF00" data-tags="product website fintech">
+    <div class="wp-ghost" aria-hidden="true">06</div>
+    <div class="wp-inner">
+      <a class="wp-logo-panel" href="https://wealthnap.in" target="_blank" rel="noopener" aria-label="Visit WealthNap">
+        <img src="client logos/WealthNap logo.png" alt="WealthNap" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Wealth<span class="acc">Nap</span></div>
+        <span class="wp-url-badge">wealthnap.in</span>
+      </a>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag product">Our product</span></div>
+        <h2 class="wp-name">WealthNap</h2>
+        <p class="wp-desc">Personal finance made enjoyable for NRIs bridging the UK and India. A vibrant, user-friendly platform that makes money management both useful and surprisingly fun.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Website</span>
+          <span class="wp-chip">Finance App</span>
+          <span class="wp-chip">NRI</span>
+          <span class="wp-chip">WordPress</span>
+        </div>
+        <a href="https://wealthnap.in" class="wp-link" target="_blank" rel="noopener">Visit site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- StopApp -->
+  <div class="wp-item" id="proj-stopapp" style="--acc: #C3FF00" data-tags="product app">
+    <div class="wp-ghost" aria-hidden="true">07</div>
+    <div class="wp-inner">
+      <div class="wp-logo-panel">
+        <img src="client logos/StopApp logo.png" alt="StopApp" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Stop<span class="acc">App</span></div>
+        <span class="wp-url-badge">Coming soon on Android</span>
+      </div>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag product">Our product</span></div>
+        <h2 class="wp-name">StopApp</h2>
+        <p class="wp-desc">An Android focus app that helps you concentrate by letting you restrict the apps that pull you away - Instagram, YouTube, or anything you choose. Built for people who want their attention back. Currently in development.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Android App</span>
+          <span class="wp-chip">Productivity</span>
+          <span class="wp-chip">Focus Tools</span>
+          <span class="wp-chip">In Development</span>
+        </div>
+        <span class="wp-coming"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 3.5V6.8L8.2 8.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg> Launching soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crystal Step -->
+  <div class="wp-item flip" id="proj-crystalstep" style="--acc: #C3FF00" data-tags="client logo-design brand-identity">
+    <div class="wp-ghost" aria-hidden="true">08</div>
+    <div class="wp-inner">
+      <div class="wp-logo-panel">
+        <img src="client logos/Crystal Step.jpg" alt="Crystal Step" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="wp-logo-text" style="display:none">Crystal<span class="acc"> Step</span></div>
+        <span class="wp-url-badge">Crystal Step</span>
+      </div>
+      <div class="wp-info">
+        <div class="wp-meta"><span class="wp-tag client">Client</span></div>
+        <h2 class="wp-name">Crystal Step</h2>
+        <p class="wp-desc">Bespoke logo design for Crystal Step - a clean, distinctive mark crafted to communicate clarity and purpose. Identity designed from the ground up.</p>
+        <div class="wp-chips">
+          <span class="wp-chip">Logo Design</span>
+          <span class="wp-chip">Brand Identity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /work-list -->
+
+<!-- CTA -->
+<section id="contact-cta">
+  <div class="cta-blob" aria-hidden="true"></div>
+  <div class="cta-inner">
+    <h2 class="cta-h2">Got a project in mind?</h2>
+    <p class="cta-sub">Drop us a brief. We'll get back within one working day.</p>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn-cta">Start a conversation <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></a>
+      <a href="contact.html" class="btn-ghost">Book a call</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer: gravity social icons -->
+<div id="social-stage" aria-label="Find us on social media">
+  <span class="stage-label" aria-hidden="true">Follow us</span>
+  <a class="social-icon" id="si-ig" href="https://www.instagram.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Instagram" style="--si-color:#E1306C">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-li" href="https://www.linkedin.com/company/ekblinksolutions/" target="_blank" rel="noopener" aria-label="LinkedIn" style="--si-color:#0A66C2">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-yt" href="https://www.youtube.com/@ekblinksolutions4191" target="_blank" rel="noopener" aria-label="YouTube" style="--si-color:#FF0000">
+    <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="var(--bg,#050505)" points="10 15 15.5 12 10 9"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-fb" href="https://www.facebook.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Facebook" style="--si-color:#1877F2">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+  </a>
+</div>
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Ek Blink Solutions<span>.</span></div>
+      <p class="footer-tagline">One blink. Everything changes.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <div class="footer-links">
+        <a href="mailto:ekblinksolutions@gmail.com" class="footer-link">ekblinksolutions@gmail.com</a>
+        <span class="footer-link" style="cursor:default">United Kingdom</span>
+        <span class="footer-link" style="cursor:default">India</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Ek Blink Solutions. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+      <span class="footer-legal-sep">&middot;</span>
+      <a href="terms.html" class="footer-legal-link">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── 1. Blink - copied exactly from index.html ─────────────────────────────
+gsap.set('#blink-top',   {yPercent:-100});
+gsap.set('#blink-bottom',{yPercent:100});
+gsap.set(['.nav-logo','.nav-link','.hamburger'],{opacity:0,y:-16});
+gsap.set(['.hero-h1','#hero-sub','#hero-count'],{opacity:0,y:14});
+
+const blink=gsap.timeline({
+  onComplete(){
+    ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()});
+  }
+});
+blink
+  .to('#blink-top',    {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
+  .to('#blink-bottom', {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
+  .to('#blink-logo',   {opacity:1,    duration:.09},                   .22)
+  .to('#blink-logo',   {opacity:0,    duration:.08},                   .55)
+  .to('#blink-top',    {yPercent:-100,duration:.46, ease:'power3.out'},.50)
+  .to('#blink-bottom', {yPercent:100, duration:.46, ease:'power3.out'},.50)
+  .to('.nav-logo',     {opacity:1,y:0,duration:.6,  ease:'power3.out'},.98)
+  .to('.nav-link',     {opacity:1,y:0,duration:.55, stagger:.04, ease:'power3.out'},1.03)
+  .to('.hamburger',    {opacity:1,y:0,duration:.5,  ease:'power3.out'},1.10)
+  .to('.hero-h1',      {opacity:1,y:0,duration:.7,  ease:'power3.out'},1.00)
+  .to('#hero-sub',     {opacity:1,y:0,duration:.6,  ease:'power3.out'},1.12)
+  .to('#hero-count',   {opacity:1,y:0,duration:.55, ease:'power3.out'},1.22);
+
+// Safety - force visibility after 2s if GSAP stalls
+setTimeout(()=>{
+  ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()});
+  document.querySelectorAll('.nav-logo,.nav-link,.hamburger,.hero-h1,#hero-sub,#hero-count').forEach(el=>{el.style.opacity='1';el.style.transform='none'});
+},2000);
+
+// ── 2. Async Lenis ────────────────────────────────────────────────────────
+(function(){
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';s.async=true;
+  s.onload=()=>{try{const l=new Lenis({lerp:.08,smoothWheel:true});l.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>l.raf(t*1000));gsap.ticker.lagSmoothing(0);window.__lenis=l;}catch(e){}};
+  document.head.appendChild(s);
+})();
+
+// ── 3. Navbar scroll ─────────────────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+},{passive:true});
+
+// ── 4. Cursor ────────────────────────────────────────────────────────────
+(function(){
+  const cur=document.getElementById('cursor');if(!cur)return;
+  document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+  document.addEventListener('mouseover',e=>{cur.classList.toggle('hover',!!(e.target.closest('a,button,[role="button"]')))});
+})();
+
+// ── 5. Hamburger ─────────────────────────────────────────────────────────
+(function(){
+  const btn=document.getElementById('hamburger-btn'),drop=document.getElementById('nav-drop');
+  let open=false;
+  btn.addEventListener('click',()=>{
+    open=!open;btn.classList.toggle('open',open);drop.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',open);drop.setAttribute('aria-hidden',!open);
+    if(window.__lenis){open?window.__lenis.stop():window.__lenis.start()}
+  });
+  drop.querySelectorAll('.drop-link').forEach(l=>l.addEventListener('click',()=>{
+    open=false;btn.classList.remove('open');drop.classList.remove('open');
+    btn.setAttribute('aria-expanded',false);drop.setAttribute('aria-hidden',true);
+    if(window.__lenis)window.__lenis.start();
+  }));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)btn.click()});
+})();
+
+// ── 6. Hero dot-grid canvas ──────────────────────────────────────────────
+(function(){
+  const heroEl=document.getElementById('work-hero');
+  const hc=document.getElementById('work-hero-canvas');
+  if(!heroEl||!hc)return;
+  const ctx=hc.getContext('2d');
+  let W,H,dots=[];const COLS=40,ROWS=22;
+  let mx=-9999,my=-9999;
+  function init(){
+    W=hc.width=heroEl.offsetWidth;H=hc.height=heroEl.offsetHeight;
+    dots=[];const gx=W/(COLS-1),gy=H/(ROWS-1);
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)dots.push({ox:c*gx,oy:r*gy,x:c*gx,y:r*gy,vx:0,vy:0});
+  }
+  init();new ResizeObserver(init).observe(heroEl);
+  heroEl.addEventListener('mousemove',e=>{const r=heroEl.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top},{passive:true});
+  heroEl.addEventListener('mouseleave',()=>{mx=-9999;my=-9999});
+  (function raf(){
+    requestAnimationFrame(raf);ctx.clearRect(0,0,W,H);
+    dots.forEach(d=>{
+      const dx=d.x-mx,dy=d.y-my,dist=Math.hypot(dx,dy);
+      if(dist<130){const f=(130-dist)/130,a=Math.atan2(dy,dx);d.vx+=Math.cos(a)*f*3.5;d.vy+=Math.sin(a)*f*3.5}
+      d.vx+=(d.ox-d.x)*.07;d.vy+=(d.oy-d.y)*.07;d.vx*=.82;d.vy*=.82;d.x+=d.vx;d.y+=d.vy;
+      const off=Math.hypot(d.x-d.ox,d.y-d.oy);
+      ctx.save();ctx.globalAlpha=.06+Math.min(off/20,.4);ctx.fillStyle=off>4?'#C3FF00':'#2A2A2A';
+      ctx.beginPath();ctx.arc(d.x,d.y,off>3?2:1.2,0,Math.PI*2);ctx.fill();ctx.restore();
+    });
+  })();
+})();
+
+// ── 7. Work items - scroll reveal + ghost parallax ───────────────────────
+(function(){
+  document.querySelectorAll('.wp-item').forEach(item=>{
+    const logoPanel=item.querySelector('.wp-logo-panel');
+    const info=item.querySelector('.wp-info');
+    const ghost=item.querySelector('.wp-ghost');
+
+    // Reveal columns on scroll
+    if(logoPanel){
+      gsap.fromTo(logoPanel,
+        {opacity:0,y:36},
+        {opacity:1,y:0,duration:.75,ease:'power3.out',
+         scrollTrigger:{trigger:item,start:'top 82%',once:true}}
+      );
+    }
+    if(info){
+      gsap.fromTo(info,
+        {opacity:0,y:36},
+        {opacity:1,y:0,duration:.75,delay:.1,ease:'power3.out',
+         scrollTrigger:{trigger:item,start:'top 82%',once:true}}
+      );
+    }
+
+    // Ghost parallax
+    if(ghost){
+      gsap.fromTo(ghost,
+        {x:'4%'},
+        {x:'-3%',ease:'none',
+         scrollTrigger:{trigger:item,start:'top bottom',end:'bottom top',scrub:1.2}}
+      );
+    }
+  });
+})();
+
+// ── 9. Filter dropdown ────────────────────────────────────────────────────
+(function(){
+  const sel=document.getElementById('work-filter-select');
+  const items=document.querySelectorAll('.wp-item');
+  if(!sel)return;
+  sel.addEventListener('change',()=>{
+    const filter=sel.value;
+    items.forEach(item=>{
+      const tags=item.dataset.tags||'';
+      const show=filter==='all'||tags.includes(filter);
+      if(show){
+        item.style.display='';
+        gsap.fromTo(item,{opacity:0,y:20},{opacity:1,y:0,duration:.4,ease:'power3.out'});
+      } else {
+        gsap.to(item,{opacity:0,y:-10,duration:.25,ease:'power3.in',onComplete:()=>{item.style.display='none'}});
+      }
+    });
+  });
+})();
+</script>
+<script>
+// Social rail fall-in
+
+
+// ── Footer social stage - gravity physics ────────────────────────────────
+(function(){
+  const stage=document.getElementById('social-stage');
+  if(!stage)return;
+  const iconEls=[
+    document.getElementById('si-ig'),
+    document.getElementById('si-li'),
+    document.getElementById('si-yt'),
+    document.getElementById('si-fb'),
+  ];
+  const RADIUS=27,D=RADIUS*2,GRAVITY=750,RESTITUTION=0.60,FLOOR_FRIC=0.85,WALL_FRIC=0.75,MIN_V=1.5,MAX_BOUNCES=22;
+  const START_X_PCT=[0.15,0.38,0.62,0.85];
+  function getW(){return stage.offsetWidth||window.innerWidth}
+  function getH(){return stage.offsetHeight||200}
+  function getGround(){return getH()-RADIUS-1}
+  const bodies=iconEls.map((el,i)=>({el,x:0,y:-RADIUS,vx:(Math.random()-.5)*80,vy:0,settled:false,bounces:0,release:250+i*170,started:false}));
+  function initPositions(){const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i];b.el.style.left=(b.x-RADIUS)+'px';b.el.style.top=(-D)+'px'})}
+  requestAnimationFrame(()=>requestAnimationFrame(initPositions));
+  window.addEventListener('resize',()=>{const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i]});initPositions()},{passive:true});
+  let triggerTime=null;
+  const observer=new IntersectionObserver((entries)=>{
+    if(entries[0].isIntersecting&&triggerTime===null){
+      triggerTime=performance.now();iconEls.forEach(el=>el.style.opacity='1');observer.disconnect();
+    }
+  },{threshold:0.25});
+  observer.observe(stage);
+  let lastT=null;
+  function raf(now){
+    requestAnimationFrame(raf);
+    if(triggerTime===null){lastT=null;return}
+    if(lastT===null){lastT=now;return}
+    const dt=Math.min((now-lastT)/1000,.033);lastT=now;
+    const elapsed=now-triggerTime,W=getW(),GROUND=getGround();
+    bodies.forEach(b=>{
+      if(b.settled)return;
+      if(!b.started){if(elapsed>=b.release){b.started=true;b.y=-RADIUS}else return}
+      b.vy+=GRAVITY*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;
+      if(b.y>=GROUND){b.y=GROUND;b.vy=-b.vy*RESTITUTION;b.vx*=FLOOR_FRIC;b.bounces++;if(Math.abs(b.vy)<MIN_V)b.vy=0;if(b.bounces>MAX_BOUNCES)b.vy=0}
+      if(b.x-RADIUS<0){b.x=RADIUS;b.vx=Math.abs(b.vx)*WALL_FRIC}
+      if(b.x+RADIUS>W){b.x=W-RADIUS;b.vx=-Math.abs(b.vx)*WALL_FRIC}
+      if(b.y>=GROUND-1&&Math.abs(b.vy)<.5&&Math.abs(b.vx)<.5){b.settled=true;b.y=GROUND;b.vx=0;b.vy=0}
+      bodies.forEach(other=>{
+        if(other===b||!other.started)return;
+        const dx=b.x-other.x,dy=b.y-other.y,dist=Math.hypot(dx,dy);
+        if(dist<D&&dist>0){
+          const overlap=(D-dist)/2,nx=dx/dist,ny=dy/dist;
+          b.x+=nx*overlap;b.y+=ny*overlap;other.x-=nx*overlap;other.y-=ny*overlap;
+          const dvx=b.vx-other.vx,dvy=b.vy-other.vy,dot=dvx*nx+dvy*ny;
+          if(dot<0){b.vx-=dot*nx*.6;b.vy-=dot*ny*.6;other.vx+=dot*nx*.6;other.vy+=dot*ny*.6}
+        }
+      });
+      b.el.style.left=(b.x-RADIUS)+'px';b.el.style.top=(b.y-RADIUS)+'px';
+    });
+  }
+  requestAnimationFrame(raf);
+})();
+</script>
+</body>
+</html>

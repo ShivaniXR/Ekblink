@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services - Ek Blink Solutions</title>
+  <meta name="description" content="Nine in-house disciplines: augmented reality, virtual reality, AI automation tools, 360 video, web design, digital marketing, app development, immersive marketing, and brand identity.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { font-size: 16px }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.6; overflow-x: hidden }
+    a { color: inherit; text-decoration: none }
+    img { display: block; max-width: 100% }
+    :root {
+      --bg: #050505; --surface: #0D0D0D; --border: #1A1A1A; --text: #F0EBE1; --dim: #4A4A4A;
+      --lime: #C3FF00; --nav-h: 72px; --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ─── Cursor ─── */
+    * { cursor: none }
+    #cursor { position: fixed; top: 0; left: 0; width: 12px; height: 12px; background: var(--lime); border-radius: 50%; border: 1.5px solid transparent; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width .2s var(--ease), height .2s var(--ease), background .2s, border-color .2s; will-change: left, top }
+    #cursor.hover { width: 38px; height: 38px; background: transparent; border-color: var(--lime) }
+    @media (hover: none) { #cursor { display: none } * { cursor: auto } }
+
+    /* ─── Blink ─── */
+    .blink-lid { position: fixed; left: 0; width: 100%; height: 70vh; z-index: 99990; pointer-events: none }
+    #blink-top { top: 0 }
+    #blink-bottom { bottom: 0 }
+    #blink-logo-wrap { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 99991; pointer-events: none }
+    #blink-logo { font: 800 clamp(1rem, 2vw, 1.45rem)/1 'Syne', sans-serif; letter-spacing: -.02em; color: #F0EBE1; opacity: 0; user-select: none; white-space: nowrap }
+    #blink-logo .bl { color: #C3FF00 }
+
+    /* ─── Navbar ─── */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; transition: background .4s, border-color .4s }
+    #navbar.scrolled { background: rgba(5,5,5,.94); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px) }
+    .nav-logo-img { height: 34px; width: auto; display: block }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem }
+    .nav-link { font-size: .85rem; color: var(--dim); transition: color .25s; position: relative }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--lime); transition: width .3s var(--ease) }
+    .nav-link:hover { color: var(--text) }
+    .nav-link:hover::after, .nav-link.active::after { width: 100% }
+    .nav-link.active { color: var(--lime) }
+    .hamburger { width: 46px; height: 46px; border: 1px solid var(--border); border-radius: 50%; background: transparent; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; position: relative; overflow: hidden }
+    .hamburger::before, .hamburger::after { content: ''; position: absolute; left: 0; right: 0; background: var(--lime); z-index: 0; transition: transform .3s var(--ease) }
+    .hamburger::before { top: 0; height: 51%; transform: scaleY(0); transform-origin: top }
+    .hamburger::after { bottom: 0; height: 51%; transform: scaleY(0); transform-origin: bottom }
+    .hamburger:hover::before, .hamburger:hover::after { transform: scaleY(1) }
+    .ham-line { width: 18px; height: 1.5px; background: var(--text); border-radius: 1px; display: block; position: relative; z-index: 1; transition: transform .35s var(--ease), opacity .25s, background .3s }
+    .hamburger:hover .ham-line { background: #050505 }
+    .hamburger.open .ham-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg) }
+    .hamburger.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0) }
+    .hamburger.open .ham-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg) }
+    #nav-drop { position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(5,5,5,.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 800; clip-path: inset(0 0 100% 0); transition: clip-path .45s var(--ease) }
+    #nav-drop.open { clip-path: inset(0 0 0% 0) }
+    .nav-drop-inner { padding: 1.5rem 2rem; display: flex; flex-direction: column }
+    .drop-link { font: 700 clamp(1.6rem, 3vw, 2.4rem)/1 'Syne', sans-serif; letter-spacing: -.02em; color: rgba(240,235,225,.45); padding: .65rem 1rem; border-bottom: 1px solid var(--border); transition: color .2s, background .25s var(--ease), padding-left .3s var(--ease) }
+    .drop-link:first-child { border-top: 1px solid var(--border) }
+    .drop-link:hover { color: #050505; background: var(--lime); padding-left: 2rem }
+
+    /* ─── Hero ─── */
+    #svc-hero {
+      min-height: auto;
+      display: flex; flex-direction: column; justify-content: flex-start;
+      padding: calc(var(--nav-h) + 3.5rem) 3.5rem 5rem;
+      position: relative; overflow: hidden; border-bottom: 1px solid var(--border);
+    }
+    #svc-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none }
+    #svc-hero::after { content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%; background: var(--lime); filter: blur(200px); opacity: .03; top: -20%; right: -8%; pointer-events: none; z-index: 0 }
+    .hero-inner { position: relative; z-index: 2 }
+    .hero-h1 { font: 800 clamp(2.4rem, 5vw, 5rem)/.9 'Syne', sans-serif; letter-spacing: -.03em; color: var(--text); margin-bottom: 2.5rem; text-wrap: balance }
+    .hero-h1 em { font: 300 italic clamp(2.4rem, 5vw, 5rem)/.9 'DM Sans', sans-serif; letter-spacing: -.03em; color: var(--lime) }
+    .hero-sub-row { display: flex; justify-content: flex-start; align-items: flex-end; gap: 3rem }
+    .hero-sub { font: 300 .95rem/1.8 'DM Sans', sans-serif; color: rgba(240,235,225,.42); max-width: 42ch }
+
+    /* ─────────────────────────────────────────────────────────
+       SERVICE BROWSER - split-index design
+    ───────────────────────────────────────────────────────── */
+    #svc-browser {
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .svb-wrap {
+      display: flex;
+      min-height: calc(100vh - var(--nav-h));
+    }
+
+    /* Left rail */
+    .svb-rail {
+      width: 34%;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: var(--nav-h);
+      align-self: flex-start;
+      height: calc(100vh - var(--nav-h));
+      overflow: hidden;
+    }
+
+    .svb-rail-head {
+      padding: 2.25rem 2.25rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .svb-rail-label {
+      font: 300 italic .64rem/1 'DM Sans', sans-serif;
+      color: var(--dim);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: .45rem;
+      display: block;
+    }
+
+    .svb-rail-title {
+      font: 700 1.05rem/1 'Syne', sans-serif;
+      letter-spacing: -.02em;
+      color: rgba(240,235,225,.55);
+    }
+
+    .svb-list {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .svb-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: 0 2.25rem;
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      cursor: pointer;
+      transition: background .2s;
+      overflow: hidden;
+    }
+
+    .svb-item:last-child { border-bottom: none }
+
+    /* Active fill bar - animates in from left */
+    .svb-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--lime);
+      transform: scaleY(0);
+      transform-origin: center;
+      transition: transform .4s var(--ease);
+    }
+
+    .svb-item.active::before { transform: scaleY(1) }
+
+    /* Subtle hover background */
+    .svb-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--lime);
+      opacity: 0;
+      transition: opacity .25s;
+      pointer-events: none;
+    }
+
+    .svb-item:hover::after { opacity: .03 }
+    .svb-item.active::after { opacity: .05 }
+
+    .svb-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      border: 1px solid var(--dim);
+      background: transparent;
+      flex-shrink: 0;
+      transition: border-color .3s, background .3s, box-shadow .3s;
+      position: relative; z-index: 1;
+    }
+
+    .svb-item.active .svb-dot {
+      border-color: var(--lime);
+      background: var(--lime);
+      box-shadow: 0 0 10px var(--lime);
+    }
+
+    .svb-item:hover:not(.active) .svb-dot {
+      border-color: rgba(240,235,225,.35);
+    }
+
+    .svb-item-meta {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: .18rem;
+      position: relative; z-index: 1;
+      min-width: 0;
+    }
+
+    .svb-item-num {
+      font: 300 italic .6rem/1 'DM Sans', sans-serif;
+      color: var(--dim);
+      letter-spacing: .08em;
+      transition: color .25s;
+    }
+
+    .svb-item.active .svb-item-num { color: var(--lime) }
+
+    .svb-item-name {
+      font: 600 clamp(.72rem, 1.15vw, .88rem)/1.25 'Syne', sans-serif;
+      letter-spacing: -.01em;
+      color: rgba(240,235,225,.18);
+      transition: color .3s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .svb-item:hover .svb-item-name { color: rgba(240,235,225,.5) }
+    .svb-item.active .svb-item-name { color: var(--text) }
+
+    .svb-arrow {
+      flex-shrink: 0;
+      color: var(--dim);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity .3s, transform .3s var(--ease), color .25s;
+      position: relative; z-index: 1;
+      font-size: .7rem;
+    }
+
+    .svb-item.active .svb-arrow {
+      opacity: 1;
+      transform: translateX(0);
+      color: var(--lime);
+    }
+
+    /* Right panel */
+    .svb-panel {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: calc(100vh - var(--nav-h));
+      padding: 4rem 4.5rem 4rem 4rem;
+      --acc: #C3FF00;
+    }
+
+    /* Ambient glow */
+    .svb-glow {
+      position: absolute;
+      width: 650px; height: 650px;
+      border-radius: 50%;
+      filter: blur(180px);
+      opacity: .055;
+      top: 50%; right: -10%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      transition: background .65s;
+      z-index: 0;
+    }
+
+    /* Ghost number watermark */
+    .svb-bg-num {
+      position: absolute;
+      right: -.03em; bottom: -.12em;
+      font: 800 28vw/1 'Syne', sans-serif;
+      letter-spacing: -.06em;
+      color: var(--acc);
+      opacity: .028;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      transition: opacity .4s, color .55s;
+    }
+
+    /* Scan-line effect element */
+    .svb-scan {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      z-index: 20;
+      pointer-events: none;
+      top: 0;
+      opacity: 0;
+      background: var(--acc);
+      transition: background .3s;
+    }
+
+    /* Content */
+    .svb-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .svb-head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .svb-counter {
+      font: 300 italic .68rem/1 'DM Sans', sans-serif;
+      color: var(--dim);
+      letter-spacing: .12em;
+    }
+
+    .svb-tag {
+      font: 400 .62rem/1 'DM Sans', sans-serif;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--acc);
+      padding: .3rem .7rem;
+      border: 1px solid;
+      border-color: color-mix(in srgb, var(--acc) 30%, transparent);
+      border-radius: 2px;
+      flex-shrink: 0;
+      transition: color .4s, border-color .4s;
+    }
+
+    .svb-title {
+      font: 800 clamp(2.6rem, 5.5vw, 5rem)/.88 'Syne', sans-serif;
+      letter-spacing: -.03em;
+      color: var(--text);
+      margin-bottom: 2.25rem;
+      text-wrap: balance;
+    }
+
+    .svb-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 2.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Accent line that "draws" in on each new service */
+    .svb-divider::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 0;
+      background: var(--acc);
+      transition: background .4s;
+    }
+
+    .svb-divider.draw::after {
+      animation: draw-line .7s var(--ease) forwards;
+    }
+
+    @keyframes draw-line {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    .svb-body {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .svb-desc {
+      font: 300 .9rem/1.9 'DM Sans', sans-serif;
+      color: rgba(240,235,225,.48);
+      margin-bottom: 2rem;
+      max-width: 46ch;
+    }
+
+    .svb-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      font: 500 .68rem/1 'DM Sans', sans-serif;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--acc);
+      border: 1px solid color-mix(in srgb, var(--acc) 28%, transparent);
+      padding: .65rem 1.4rem;
+      border-radius: 2px;
+      transition: background .18s, color .18s, gap .2s var(--ease), border-color .18s;
+    }
+
+    .svb-cta:hover {
+      background: var(--acc);
+      color: #050505;
+      gap: .8rem;
+      border-color: var(--acc);
+    }
+
+    .svb-caps-head {
+      font: 300 italic .62rem/1 'DM Sans', sans-serif;
+      color: var(--dim);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .svb-caps {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .svb-caps li {
+      font: 300 .76rem/1.5 'DM Sans', sans-serif;
+      color: rgba(240,235,225,.3);
+      padding: .5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      transition: color .18s;
+    }
+
+    .svb-caps li:hover { color: rgba(240,235,225,.7) }
+
+    .svb-caps li::before {
+      content: '';
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--acc);
+      flex-shrink: 0;
+      opacity: .75;
+      transition: opacity .2s;
+    }
+
+    .svb-caps li:hover::before { opacity: 1 }
+
+    /* ─── How We Work ─── */
+    #how-we-work { background: var(--surface); border-top: 1px solid var(--border) }
+    .hww-inner { max-width: 1200px; margin: 0 auto; padding: 7rem 3.5rem }
+    .hww-label { font: 300 italic .7rem/1 'DM Sans', sans-serif; color: var(--lime); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1.4rem; display: block }
+    .hww-h2 { font: 800 clamp(2rem, 4vw, 3.4rem)/.9 'Syne', sans-serif; letter-spacing: -.025em; margin-bottom: 0 }
+    .hww-timeline { position: relative; margin-top: 5rem; padding-left: 4rem; max-width: 720px }
+    .hww-timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 1px; background: var(--border) }
+    #hww-fill { position: absolute; left: 0; top: 10px; width: 1px; background: var(--lime); height: 0 }
+    .hww-step { position: relative; padding-bottom: 4.5rem; cursor: default }
+    .hww-step:last-child { padding-bottom: 0 }
+    .hww-marker { position: absolute; left: calc(-4rem - 5px + .5px); top: 10px; width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--dim); background: var(--surface); transition: border-color .4s, background .4s, box-shadow .45s }
+    .hww-step.active .hww-marker { border-color: var(--lime); background: var(--lime); box-shadow: 0 0 18px rgba(195,255,0,.4) }
+    .hww-step.hovered .hww-marker { border-color: rgba(195,255,0,.5); background: rgba(195,255,0,.12); box-shadow: 0 0 12px rgba(195,255,0,.2) }
+    .hww-step-num { font: 300 italic .72rem/1 'DM Sans', sans-serif; color: var(--dim); letter-spacing: .08em; margin-bottom: .85rem }
+    .hww-step-title { font: 700 clamp(1.5rem, 2.5vw, 2.2rem)/.95 'Syne', sans-serif; letter-spacing: -.025em; margin-bottom: 1rem; transition: color .35s }
+    .hww-step:hover .hww-step-title, .hww-step.active .hww-step-title { color: var(--lime) }
+    .hww-step-body { font: 300 .95rem/1.85 'DM Sans', sans-serif; color: rgba(240,235,225,.42); max-width: 52ch; transition: color .35s }
+    .hww-step:hover .hww-step-body { color: rgba(240,235,225,.7) }
+
+    /* ─── Footer socials stage ─── */
+    #social-stage { position: relative; height: 200px; overflow: hidden; border-top: 1px solid var(--border) }
+    .social-icon { position: absolute; width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); color: #666; will-change: left, top; z-index: 10; opacity: 0; transition: background .25s, border-color .25s, color .25s }
+    .social-icon:hover { background: rgba(255,255,255,.08); border-color: var(--si-color, var(--lime)); color: var(--si-color, var(--lime)) }
+    .si-inner { transition: transform .15s var(--ease); pointer-events: none; display: flex; align-items: center; justify-content: center; width: 100%; height: 100% }
+    .social-icon svg { width: 22px; height: 22px; pointer-events: none }
+    .stage-label { position: absolute; top: .75rem; left: 50%; transform: translateX(-50%); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(240,235,225,.1); font-weight: 500; white-space: nowrap; pointer-events: none; user-select: none }
+
+    /* ─── Footer ─── */
+    footer { border-top: 1px solid var(--border); padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto }
+    .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 4rem; margin-bottom: 4rem }
+    .footer-logo { font: 800 1.05rem/1 'Syne', sans-serif; letter-spacing: -.02em; margin-bottom: 1rem }
+    .footer-logo span { color: var(--lime) }
+    .footer-tagline { font-size: .85rem; color: var(--dim); line-height: 1.65; max-width: 28ch; font-weight: 300 }
+    .footer-col-title { font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 1.5rem }
+    .footer-links { display: flex; flex-direction: column; gap: .7rem }
+    .footer-link { font-size: .88rem; color: rgba(240,235,225,.45); transition: color .2s; font-weight: 300 }
+    .footer-link:hover { color: var(--text) }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border) }
+    .footer-copy { font-size: .75rem; color: var(--dim) }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem }
+    .fs-link { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #383838; border: 1px solid var(--border); border-radius: 50%; transition: color .3s var(--ease), border-color .3s var(--ease), transform .2s var(--ease) }
+    .fs-link:hover { transform: scale(1.12) }
+    .fs-ig:hover { color: #E1306C; border-color: rgba(225,48,108,.45) }
+    .fs-li:hover { color: #0A66C2; border-color: rgba(10,102,194,.45) }
+    .fs-yt:hover { color: #FF0000; border-color: rgba(255,0,0,.45) }
+    .fs-fb:hover { color: #1877F2; border-color: rgba(24,119,242,.45) }
+
+    /* ─── Responsive ─── */
+    
+
+      .svb-rail {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      .svb-rail-head { display: none }
+
+      .svb-list {
+        flex-direction: row;
+        flex: unset;
+        overflow: visible;
+      }
+
+      .svb-item {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        flex: unset;
+        gap: .2rem;
+        padding: .85rem 1.25rem;
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+        white-space: nowrap;
+        min-width: max-content;
+      }
+
+      .svb-item:last-child { border-right: none }
+
+      .svb-item::before {
+        top: auto; bottom: 0; left: 0; right: 0;
+        width: auto; height: 2px;
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+
+      .svb-item.active::before { transform: scaleX(1) }
+
+      .svb-dot { display: none }
+      .svb-arrow { display: none }
+
+      .svb-panel { min-height: auto; padding: 2.5rem 2rem 3rem }
+
+      .svb-body { grid-template-columns: 1fr; gap: 2.25rem }
+
+      .svb-title { font-size: clamp(2.2rem, 7vw, 3.5rem) }
+
+      .svb-caps { grid-template-columns: 1fr 1fr }
+
+      #svc-hero { padding: calc(var(--nav-h) + 1.5rem) 2rem 3.5rem; min-height: 64vh }
+      .hero-sub-row { flex-direction: column; align-items: flex-start; gap: 1rem }
+      .hww-inner { padding: 5rem 2rem }
+      .nav-links { display: none }
+      .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 4rem; margin-bottom: 4rem }
+    }
+
+    
+      .svb-head-row { flex-direction: column; align-items: flex-start; gap: .75rem }
+      .svb-title { font-size: clamp(2rem, 9vw, 2.8rem) }
+      .svb-body { gap: 1.75rem }
+      .svb-caps { grid-template-columns: 1fr }
+      .hww-timeline { padding-left: 2.5rem }
+      .hww-step { padding-bottom: 3rem }
+      .hww-marker { left: calc(-2.5rem - 5px + .5px) }
+      .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 4rem; margin-bottom: 4rem }
+    }
+  
+    .footer-legal{display:flex;align-items:center;gap:.75rem}
+    .footer-legal-link{font-size:.75rem;color:var(--dim);transition:color .2s}
+    .footer-legal-link:hover{color:var(--text)}
+    .footer-legal-sep{color:var(--dim);opacity:.35;font-size:.75rem}
+  
+    /* ─── Responsive: shared ─── */
+    @media(max-width:960px){
+      .nav-links{display:none}
+    }
+    @media(max-width:600px){
+      footer{padding:3.5rem 1.5rem 2rem}
+      .footer-grid{grid-template-columns:1fr!important;gap:2.5rem}
+      .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    @media(max-width:980px){
+      /* Split-index browser becomes vertical */
+      .svb-wrap{flex-direction:column}
+      .svb-rail{
+        width:100%;position:relative;top:0;height:auto;
+        border-right:none;border-bottom:1px solid var(--border);
+        overflow-x:auto;overflow-y:hidden;
+        flex-direction:row;flex-wrap:nowrap;
+        -webkit-overflow-scrolling:touch;scrollbar-width:none
+      }
+      .svb-rail::-webkit-scrollbar{display:none}
+      .svb-rail-head{display:none}
+      .svb-items{flex-direction:row;overflow-x:auto;flex-wrap:nowrap;padding:.75rem 1rem;gap:.5rem;border-top:none}
+      .svb-item{flex-shrink:0;padding:.6rem 1.1rem;border-bottom:none;border-right:1px solid var(--border);white-space:nowrap;flex-direction:row;align-items:center;gap:.6rem}
+      .svb-item:last-child{border-right:none}
+      .svb-item-num{display:none}
+      .svb-item-disc{display:none}
+      .svb-panel{padding:2.5rem 1.5rem 3rem;min-height:auto}
+      .svb-bg-num{display:none}
+      .svb-caps{grid-template-columns:1fr 1fr}
+      #svc-hero{padding:calc(var(--nav-h)+2.5rem) 1.5rem 3.5rem}
+    }
+    @media(max-width:580px){
+      .svb-caps{grid-template-columns:1fr}
+      .svb-title{font-size:clamp(2rem,9vw,2.8rem)}
+      .svb-head-row{flex-direction:column;align-items:flex-start;gap:.75rem}
+      .svb-body{gap:1.75rem}
+      .hww-timeline{padding-left:2.5rem}
+      .hww-step{padding-bottom:3rem}
+      .hww-marker{left:calc(-2.5rem - 5px + .5px)}
+    }
+  </style>
+</head>
+<body>
+
+  <svg id="blink-top" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 0 H 100 V 100 A 50 28.6 0 0 0 0 100 Z" fill="#1c1c1c"/></svg>
+  <svg id="blink-bottom" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 100 H 100 V 0 A 50 28.6 0 0 1 0 0 Z" fill="#1c1c1c"/></svg>
+  <div id="blink-logo-wrap" aria-hidden="true"><span id="blink-logo">Ek Blink<span class="bl">.</span></span></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <nav id="navbar" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Ek Blink Solutions" class="nav-logo-img"></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="services.html" class="nav-link active">Services</a>
+    <a href="work.html" class="nav-link">Work</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+  </button>
+</nav>
+<div id="nav-drop" aria-hidden="true">
+  <div class="nav-drop-inner">
+    <a href="index.html" class="drop-link">Home</a>
+    <a href="services.html" class="drop-link">Services</a>
+    <a href="work.html" class="drop-link">Work</a>
+    <a href="about.html" class="drop-link">About</a>
+    <a href="blog.html" class="drop-link">Blog</a>
+    <a href="contact.html" class="drop-link">Contact</a>
+  </div>
+</div>
+
+  <!-- ── Hero ── -->
+  <section id="svc-hero">
+    <canvas id="svc-hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <h1 class="hero-h1">What we <em>build.</em></h1>
+      <div class="hero-sub-row">
+        <p class="hero-sub">From AR and VR to web, apps, AI automation, brand identity, and live immersive marketing. All in-house, no briefing agencies.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Service browser ── -->
+  <section id="svc-browser" aria-label="Our services">
+    <div class="svb-wrap">
+
+      <!-- Left: sticky index rail -->
+      <nav class="svb-rail" id="svb-rail" aria-label="Service categories">
+        <div class="svb-rail-head">
+          <span class="svb-rail-label">Select a service</span>
+          <span class="svb-rail-title">What we do</span>
+        </div>
+        <ul class="svb-list" id="svb-list" role="tablist">
+          <li class="svb-item active" data-idx="0" role="tab" aria-selected="true" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">01</span>
+              <span class="svb-item-name">Augmented Reality</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="1" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">02</span>
+              <span class="svb-item-name">Virtual Reality</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="2" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">03</span>
+              <span class="svb-item-name">AI Automation</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="3" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">04</span>
+              <span class="svb-item-name">360 Video</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="4" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">05</span>
+              <span class="svb-item-name">Web Design &amp; Dev</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="5" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">06</span>
+              <span class="svb-item-name">Digital Marketing</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="6" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">07</span>
+              <span class="svb-item-name">App Development</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="7" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">08</span>
+              <span class="svb-item-name">Immersive Marketing</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+          <li class="svb-item" data-idx="8" role="tab" aria-selected="false" tabindex="0">
+            <span class="svb-dot"></span>
+            <span class="svb-item-meta">
+              <span class="svb-item-num">09</span>
+              <span class="svb-item-name">Brand Identity</span>
+            </span>
+            <span class="svb-arrow" aria-hidden="true">&#8594;</span>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right: detail panel -->
+      <div class="svb-panel" id="svb-panel" role="tabpanel">
+        <div class="svb-glow" id="svb-glow"></div>
+        <div class="svb-bg-num" id="svb-bg-num" aria-hidden="true">01</div>
+        <div class="svb-scan" id="svb-scan" aria-hidden="true"></div>
+        <div class="svb-content" id="svb-content"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── How We Work ── -->
+  <section id="how-we-work">
+    <div class="hww-inner">
+      <span class="hww-label">Our process</span>
+      <h2 class="hww-h2">How we work</h2>
+      <div class="hww-timeline" id="hww-timeline">
+        <div id="hww-fill"></div>
+
+        <div class="hww-step">
+          <div class="hww-marker"></div>
+          <div class="hww-step-num">01 - Discover</div>
+          <h3 class="hww-step-title">Brief &amp; Discover</h3>
+          <p class="hww-step-body">We audit your market position, competitors, and environment before a single line of strategy is written. Stakeholder interviews, SWOT analysis, and audience research tell us exactly where the opportunity sits.</p>
+        </div>
+
+        <div class="hww-step">
+          <div class="hww-marker"></div>
+          <div class="hww-step-num">02 - Strategise</div>
+          <h3 class="hww-step-title">Goals &amp; Roadmap</h3>
+          <p class="hww-step-body">Clear objectives, SMART goals, and a targeted plan. We define your KPIs, segment your audience, and build a roadmap that links your positioning directly to your growth targets.</p>
+        </div>
+
+        <div class="hww-step">
+          <div class="hww-marker"></div>
+          <div class="hww-step-num">03 - Execute</div>
+          <h3 class="hww-step-title">Build &amp; Deliver</h3>
+          <p class="hww-step-body">Full in-house delivery. Creative production, development, and campaign management under one roof. No briefing agencies, no subcontracting. The team you meet is the team that builds it.</p>
+        </div>
+
+        <div class="hww-step">
+          <div class="hww-marker"></div>
+          <div class="hww-step-num">04 - Optimise</div>
+          <h3 class="hww-step-title">Measure &amp; Refine</h3>
+          <p class="hww-step-body">Real-time tracking, performance reports, and continuous refinement. We monitor KPIs, read the data, and adjust strategy to keep results moving in the right direction.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Social physics stage ── -->
+  <div id="social-stage" aria-label="Find us on social media">
+    <span class="stage-label" aria-hidden="true">Follow us</span>
+    <a class="social-icon" id="si-ig" href="https://www.instagram.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Instagram" style="--si-color:#E1306C">
+      <div class="si-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></div>
+    </a>
+    <a class="social-icon" id="si-li" href="https://www.linkedin.com/company/ekblinksolutions/" target="_blank" rel="noopener" aria-label="LinkedIn" style="--si-color:#0A66C2">
+      <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+    </a>
+    <a class="social-icon" id="si-yt" href="https://www.youtube.com/@ekblinksolutions4191" target="_blank" rel="noopener" aria-label="YouTube" style="--si-color:#FF0000">
+      <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="var(--bg,#050505)" points="10 15 15.5 12 10 9"/></svg></div>
+    </a>
+    <a class="social-icon" id="si-fb" href="https://www.facebook.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Facebook" style="--si-color:#1877F2">
+      <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+    </a>
+  </div>
+
+  <footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Ek Blink Solutions<span>.</span></div>
+      <p class="footer-tagline">One blink. Everything changes.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <div class="footer-links">
+        <a href="mailto:ekblinksolutions@gmail.com" class="footer-link">ekblinksolutions@gmail.com</a>
+        <span class="footer-link" style="cursor:default">United Kingdom</span>
+        <span class="footer-link" style="cursor:default">India</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Ek Blink Solutions. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+      <span class="footer-legal-sep">&middot;</span>
+      <a href="terms.html" class="footer-legal-link">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+  <script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── 1. Blink ──────────────────────────────────────────────────────────────
+  gsap.set('#blink-top',    { yPercent: -100 });
+  gsap.set('#blink-bottom', { yPercent: 100 });
+  gsap.set(['.nav-logo', '.nav-link', '.hamburger'], { opacity: 0, y: -14 });
+  gsap.set(['.hero-h1', '.hero-sub'], { opacity: 0, y: 12 });
+  const blinkTl = gsap.timeline({
+    onComplete() {
+      ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.remove();
+      });
+    }
+  });
+  blinkTl
+    .to('#blink-top',    { yPercent: 0,    duration: .28, ease: 'power4.in' }, 0)
+    .to('#blink-bottom', { yPercent: 0,    duration: .28, ease: 'power4.in' }, 0)
+    .to('#blink-logo',   { opacity: 1,     duration: .09 }, .22)
+    .to('#blink-logo',   { opacity: 0,     duration: .08 }, .55)
+    .to('#blink-top',    { yPercent: -100, duration: .46, ease: 'power3.out' }, .50)
+    .to('#blink-bottom', { yPercent: 100,  duration: .46, ease: 'power3.out' }, .50)
+    .to('.nav-logo',     { opacity: 1, y: 0, duration: .6,  ease: 'power3.out' }, .98)
+    .to('.nav-link',     { opacity: 1, y: 0, duration: .55, stagger: .04, ease: 'power3.out' }, 1.03)
+    .to('.hamburger',    { opacity: 1, y: 0, duration: .5,  ease: 'power3.out' }, 1.10)
+    .to('.hero-h1',      { opacity: 1, y: 0, duration: .7,  ease: 'power3.out' }, 1.00)
+    .to('.hero-sub',     { opacity: 1, y: 0, duration: .6,  ease: 'power3.out' }, 1.12)
+  // Safety fallback
+  setTimeout(() => {
+    document.querySelectorAll('.nav-logo,.nav-link,.hamburger,.hero-h1,.hero-sub').forEach(el => {
+      if (el) { el.style.opacity = '1'; el.style.transform = 'none'; }
+    });
+    ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.remove();
+    });
+  }, 2200);
+
+  // ── 2. Lenis ──────────────────────────────────────────────────────────────
+  (async () => {
+    try {
+      const { default: Lenis } = await import('https://unpkg.com/lenis@1.1.14/dist/lenis.mjs');
+      const lenis = new Lenis({ lerp: .09, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(t => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } catch(e) {}
+  })();
+
+  // ── 3. Navbar ─────────────────────────────────────────────────────────────
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 80), { passive: true });
+
+  // ── 4. Cursor ─────────────────────────────────────────────────────────────
+  const cur = document.getElementById('cursor');
+  if (cur) {
+    document.addEventListener('mousemove', e => { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px' });
+    document.addEventListener('mouseover', e => { cur.classList.toggle('hover', !!(e.target.closest('a,button,[role="button"],[tabindex="0"]'))) });
+  }
+
+  // ── 5. Hamburger ──────────────────────────────────────────────────────────
+  const ham = document.getElementById('hamburger-btn'), drop = document.getElementById('nav-drop');
+  ham && ham.addEventListener('click', () => {
+    const o = ham.classList.toggle('open');
+    ham.setAttribute('aria-expanded', o);
+    drop.classList.toggle('open', o);
+    drop.setAttribute('aria-hidden', !o);
+  });
+
+  // ── 6. Service browser ────────────────────────────────────────────────────
+  (function () {
+    const ACC = '#C3FF00';
+    const SERVICES = [
+      {
+        num: '01', accent: ACC, tag: 'AR / Mixed Reality',
+        name: 'Augmented Reality',
+        desc: 'WebAR campaigns, app-based AR, and social AR filters for Snapchat, TikTok, and YouTube. Built in 8th Wall, Lens Studio, and Effect House - no app required for web experiences.',
+        caps: ['WebAR - no app required', 'App-based AR', 'Lens Studio (Snapchat)', 'Effect House (TikTok)', 'Product try-on and visualisation', 'AR training and guided workflows']
+      },
+      {
+        num: '02', accent: ACC, tag: 'VR / Spatial',
+        name: 'Virtual Reality',
+        desc: 'Fully immersive VR experiences for enterprise, entertainment, and brand. From standalone headset apps to high-fidelity PCVR environments and social spatial platforms.',
+        caps: ['Immersive brand experiences', 'Spatial platforms (VRChat, Horizon)', 'VR training and onboarding', 'Cinematic VR film', '360 VR walkthroughs', 'PCVR and standalone delivery']
+      },
+      {
+        num: '03', accent: ACC, tag: 'AI / Automation',
+        name: 'AI Automation Tools',
+        desc: 'Custom LLM pipelines, automation workflows, and AI-powered internal tools that reduce repetitive work and sharpen decisions. Built to your process, not a template.',
+        caps: ['Custom LLM pipelines', 'Workflow automation', 'Chatbot and copilot builds', 'AI content engines', 'Data extraction tools', 'Process intelligence']
+      },
+      {
+        num: '04', accent: ACC, tag: 'Video / Capture',
+        name: '360 Video',
+        desc: 'Live-action and rendered 360 video for events, tourism, real estate, and brand campaigns. Delivered for headsets, web players, and social platforms with full post-production.',
+        caps: ['Live-action 360 capture', 'Interactive 360 experiences', 'VR headset delivery', 'Social and web distribution', 'Behind-the-scenes production', 'CGI and rendered 360']
+      },
+      {
+        num: '05', accent: ACC, tag: 'Web / Digital',
+        name: 'Web Design & Dev',
+        desc: 'Brand websites, campaign microsites, and e-commerce builds with design that converts. Performance-first, CMS-integrated, and built to outlast the brief.',
+        caps: ['Brand and portfolio websites', 'Campaign microsites', 'E-commerce builds', 'CMS integration', 'Core Web Vitals optimisation', 'SEO and performance']
+      },
+      {
+        num: '06', accent: ACC, tag: 'Paid / Organic',
+        name: 'Digital Marketing',
+        desc: 'Paid social, paid search, and global campaign strategy. We handle buying, creative production, attribution, and post-campaign analysis - all within the same team.',
+        caps: ['Paid social (Meta, TikTok)', 'Paid search (Google)', 'Creative production and testing', 'Analytics and attribution', 'Global campaign management', 'Strategy and media buying']
+      },
+      {
+        num: '07', accent: ACC, tag: 'iOS / Android',
+        name: 'App Development',
+        desc: 'iOS, Android, and cross-platform apps built with React Native. From UX prototype to App Store launch, including ongoing support and iterative product releases.',
+        caps: ['iOS native apps', 'Android native apps', 'Cross-platform (React Native)', 'UX/UI design end-to-end', 'App Store strategy', 'Ongoing support and iteration']
+      },
+      {
+        num: '08', accent: ACC, tag: 'Live / Physical',
+        name: 'Immersive Marketing',
+        desc: 'Physical-digital experiences for events, retail, and brand activations. Projection mapping, interactive installations, and live moments that get remembered - and shared.',
+        caps: ['Location-based installations', 'Projection mapping', 'Interactive activations', 'Festival and retail', 'Multi-sensory production', 'Live brand experiences']
+      },
+      {
+        num: '09', accent: ACC, tag: 'Brand / Visual',
+        name: 'Brand Identity',
+        desc: 'From first mark to full system. Visual identities that hold together across digital, print, product, and environment - logo, type, colour, and guidelines as a working toolkit.',
+        caps: ['Logo and brand mark', 'Colour and typography systems', 'Brand guidelines', 'Across print and digital', 'Packaging and collateral', 'Brand strategy and naming']
+      }
+    ];
+
+    const panel    = document.getElementById('svb-panel');
+    const glow     = document.getElementById('svb-glow');
+    const bgNum    = document.getElementById('svb-bg-num');
+    const scanEl   = document.getElementById('svb-scan');
+    const contentEl = document.getElementById('svb-content');
+    const items    = document.querySelectorAll('.svb-item');
+
+    let current  = 0;
+    let animating = false;
+
+    // Build HTML for a service
+    function buildContent(s) {
+      const capsHTML = s.caps.map(c => `<li>${c}</li>`).join('');
+      return `
+        <div class="svb-head-row">
+          <span class="svb-counter">${s.num} &mdash; 09</span>
+          <span class="svb-tag">${s.tag}</span>
+        </div>
+        <h2 class="svb-title">${s.name}</h2>
+        <div class="svb-divider" id="svb-divider"></div>
+        <div class="svb-body">
+          <div>
+            <p class="svb-desc">${s.desc}</p>
+            <a href="contact.html" class="svb-cta">
+              Discuss a brief
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div>
+            <div class="svb-caps-head">Capabilities</div>
+            <ul class="svb-caps">${capsHTML}</ul>
+          </div>
+        </div>
+      `;
+    }
+
+    // Apply accent vars to panel
+    function applyAccent(s) {
+      panel.style.setProperty('--acc', s.accent);
+      glow.style.background = s.accent;
+      bgNum.textContent = s.num;
+      bgNum.style.color = s.accent;
+      scanEl.style.background = s.accent;
+    }
+
+    // Trigger the draw-line animation on the divider
+    function triggerDividerDraw() {
+      const div = document.getElementById('svb-divider');
+      if (!div) return;
+      div.classList.remove('draw');
+      void div.offsetWidth; // reflow
+      div.classList.add('draw');
+    }
+
+    // Switch service
+    async function goTo(idx) {
+      if (idx === current || animating) return;
+      animating = true;
+      const next = SERVICES[idx];
+
+      // Scan line: sweep top to bottom
+      gsap.fromTo(scanEl,
+        { scaleX: 0, opacity: 1, top: 0 },
+        { scaleX: 1, opacity: 1, duration: .18, ease: 'power2.out', transformOrigin: 'left center' }
+      );
+
+      // Content exit
+      gsap.to(contentEl, { opacity: 0, y: -16, duration: .2, ease: 'power2.in', delay: .06 });
+
+      // After exit: swap content, update rail
+      await new Promise(r => setTimeout(r, 280));
+
+      items[current].classList.remove('active');
+      items[current].setAttribute('aria-selected', 'false');
+      items[idx].classList.add('active');
+      items[idx].setAttribute('aria-selected', 'true');
+      current = idx;
+
+      // Update panel accent + content
+      applyAccent(next);
+      contentEl.innerHTML = buildContent(next);
+      contentEl.style.opacity = '0';
+      contentEl.style.transform = 'translateY(16px)';
+
+      // Scan line fade out
+      gsap.to(scanEl, { opacity: 0, duration: .25, ease: 'power1.out' });
+
+      // Content enter
+      gsap.to(contentEl, { opacity: 1, y: 0, duration: .38, ease: 'power3.out',
+        onComplete() { animating = false; triggerDividerDraw(); }
+      });
+    }
+
+    // Rail item events
+    items.forEach((item, i) => {
+      item.addEventListener('click', () => goTo(i));
+      item.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo(i); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); goTo(Math.min(i + 1, SERVICES.length - 1)); }
+        if (e.key === 'ArrowUp')   { e.preventDefault(); goTo(Math.max(i - 1, 0)); }
+      });
+
+    });
+
+    // Initial render (no transition)
+    applyAccent(SERVICES[0]);
+    contentEl.innerHTML = buildContent(SERVICES[0]);
+    contentEl.style.opacity = '1';
+
+    // Rail reveal: film-strip wipe on page load
+    gsap.set(items, { clipPath: 'inset(0 100% 0 0)' });
+    gsap.to(items, {
+      clipPath: 'inset(0 0% 0 0)',
+      duration: .55,
+      stagger: .045,
+      delay: 1.3,
+      ease: 'power3.out',
+      onComplete: triggerDividerDraw
+    });
+
+    // Content first reveal
+    gsap.from(contentEl, { opacity: 0, y: 14, duration: .65, delay: 1.5, ease: 'power3.out' });
+  })();
+
+  // ── 7. Hero dot-grid canvas ───────────────────────────────────────────────
+  (function () {
+    const heroEl = document.getElementById('svc-hero');
+    const hc = document.getElementById('svc-hero-canvas');
+    if (!heroEl || !hc) return;
+    const ctx = hc.getContext('2d');
+    let W, H, dots = [];
+    const COLS = 38, ROWS = 18;
+    let mx = -9999, my = -9999;
+    function init() {
+      W = hc.width = heroEl.offsetWidth; H = hc.height = heroEl.offsetHeight;
+      dots = []; const gx = W / (COLS - 1), gy = H / (ROWS - 1);
+      for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++)
+        dots.push({ ox: c * gx, oy: r * gy, x: c * gx, y: r * gy, vx: 0, vy: 0 });
+    }
+    init();
+    new ResizeObserver(init).observe(heroEl);
+    heroEl.addEventListener('mousemove', e => { const r = heroEl.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; }, { passive: true });
+    heroEl.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
+    (function raf() {
+      requestAnimationFrame(raf);
+      ctx.clearRect(0, 0, W, H);
+      dots.forEach(d => {
+        const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy);
+        if (dist < 120) { const f = (120 - dist) / 120, a = Math.atan2(dy, dx); d.vx += Math.cos(a) * f * 3.2; d.vy += Math.sin(a) * f * 3.2; }
+        d.vx += (d.ox - d.x) * .07; d.vy += (d.oy - d.y) * .07;
+        d.vx *= .82; d.vy *= .82; d.x += d.vx; d.y += d.vy;
+        const off = Math.hypot(d.x - d.ox, d.y - d.oy);
+        ctx.save(); ctx.globalAlpha = .06 + Math.min(off / 20, .38);
+        ctx.fillStyle = off > 4 ? '#C3FF00' : '#2A2A2A';
+        ctx.beginPath(); ctx.arc(d.x, d.y, off > 3 ? 1.8 : 1.1, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      });
+    })();
+  })();
+
+  // ── 8. How We Work timeline ───────────────────────────────────────────────
+  (function () {
+    const steps = document.querySelectorAll('.hww-step');
+    const fill  = document.getElementById('hww-fill');
+    const tl    = document.getElementById('hww-timeline');
+    if (!steps.length || !fill || !tl) return;
+    steps.forEach(step => {
+      step.addEventListener('mouseenter', () => step.classList.add('hovered'));
+      step.addEventListener('mouseleave', () => step.classList.remove('hovered'));
+    });
+    ScrollTrigger.create({
+      trigger: tl, start: 'top 75%', end: 'bottom 35%', scrub: .6,
+      onUpdate(self) {
+        fill.style.height = (self.progress * tl.scrollHeight) + 'px';
+        steps.forEach((s, i) => s.classList.toggle('active', self.progress >= (i + .5) / steps.length));
+      }
+    });
+    gsap.set('.hww-step', { opacity: 0, y: 16 });
+    ScrollTrigger.create({
+      trigger: tl, start: 'top 82%', once: true,
+      onEnter: () => gsap.to('.hww-step', { opacity: 1, y: 0, duration: .6, stagger: .13, ease: 'power3.out' })
+    });
+    gsap.set(['.hww-label', '.hww-h2'], { opacity: 0, y: 12 });
+    ScrollTrigger.create({
+      trigger: '#how-we-work', start: 'top 82%', once: true,
+      onEnter: () => gsap.to(['.hww-label', '.hww-h2'], { opacity: 1, y: 0, duration: .6, stagger: .1, ease: 'power3.out' })
+    });
+    // Safety
+    setTimeout(() => {
+      document.querySelectorAll('.hww-label,.hww-h2,.hww-step').forEach(el => { el.style.opacity = ''; el.style.transform = ''; });
+    }, 3000);
+  })();
+
+  // ── 9. Social physics stage ───────────────────────────────────────────────
+  (function () {
+    const stage = document.getElementById('social-stage');
+    if (!stage) return;
+    const iconEls = [document.getElementById('si-ig'), document.getElementById('si-li'), document.getElementById('si-yt'), document.getElementById('si-fb')];
+    const RADIUS = 27, D = RADIUS * 2, GRAVITY = 750, RESTITUTION = .60, FLOOR_FRIC = .85, WALL_FRIC = .75, MIN_V = 1.5, MAX_BOUNCES = 22;
+    const START_X_PCT = [0.15, 0.38, 0.62, 0.85];
+    function getW() { return stage.offsetWidth || window.innerWidth }
+    function getH() { return stage.offsetHeight || 200 }
+    function getGround() { return getH() - RADIUS - 1 }
+    const bodies = iconEls.map((el, i) => ({ el, x: 0, y: -RADIUS, vx: (Math.random() - .5) * 80, vy: 0, settled: false, bounces: 0, release: 250 + i * 170, started: false }));
+    function initPositions() { const W = getW(); bodies.forEach((b, i) => { b.x = W * START_X_PCT[i]; b.el.style.left = (b.x - RADIUS) + 'px'; b.el.style.top = (-D) + 'px'; }) }
+    requestAnimationFrame(() => requestAnimationFrame(initPositions));
+    window.addEventListener('resize', () => { const W = getW(); bodies.forEach((b, i) => { b.x = W * START_X_PCT[i]; }); initPositions(); }, { passive: true });
+    let triggerTime = null;
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && triggerTime === null) {
+        triggerTime = performance.now();
+        iconEls.forEach(el => el.style.opacity = '1');
+        observer.disconnect();
+      }
+    }, { threshold: 0.25 });
+    observer.observe(stage);
+    let lastT = null;
+    (function raf(now) {
+      requestAnimationFrame(raf);
+      if (triggerTime === null) { lastT = null; return; }
+      if (lastT === null) { lastT = now; return; }
+      const dt = Math.min((now - lastT) / 1000, .033); lastT = now;
+      const elapsed = now - triggerTime, W = getW(), GROUND = getGround();
+      bodies.forEach(b => {
+        if (b.settled) return;
+        if (!b.started) { if (elapsed >= b.release) { b.started = true; b.y = -RADIUS; } else return; }
+        b.vy += GRAVITY * dt; b.x += b.vx * dt; b.y += b.vy * dt;
+        if (b.y >= GROUND) { b.y = GROUND; b.vy = -b.vy * RESTITUTION; b.vx *= FLOOR_FRIC; b.bounces++; if (Math.abs(b.vy) < MIN_V) b.vy = 0; if (b.bounces > MAX_BOUNCES) b.vy = 0; }
+        if (b.x - RADIUS < 0) { b.x = RADIUS; b.vx = Math.abs(b.vx) * WALL_FRIC; }
+        if (b.x + RADIUS > W) { b.x = W - RADIUS; b.vx = -Math.abs(b.vx) * WALL_FRIC; }
+        if (b.y >= GROUND - 1 && Math.abs(b.vy) < .5 && Math.abs(b.vx) < .5) { b.settled = true; b.y = GROUND; b.vx = 0; b.vy = 0; }
+        bodies.forEach(other => {
+          if (other === b || !other.started) return;
+          const dx = b.x - other.x, dy = b.y - other.y, dist = Math.hypot(dx, dy);
+          if (dist < D && dist > 0) {
+            const overlap = (D - dist) / 2, nx = dx / dist, ny = dy / dist;
+            b.x += nx * overlap; b.y += ny * overlap; other.x -= nx * overlap; other.y -= ny * overlap;
+            const dvx = b.vx - other.vx, dvy = b.vy - other.vy, dot = dvx * nx + dvy * ny;
+            if (dot < 0) { b.vx -= dot * nx * .6; b.vy -= dot * ny * .6; other.vx += dot * nx * .6; other.vy += dot * ny * .6; }
+          }
+        });
+        b.el.style.left = (b.x - RADIUS) + 'px'; b.el.style.top = (b.y - RADIUS) + 'px';
+      });
+    })(performance.now());
+  })();
+  </script>
+</body>
+</html>
