@@ -445,7 +445,7 @@ function fmtDate(str){
 function cardHTML(post){
   const img=post.imageRef?imageUrl(post.imageRef):null;
   const cat=(post.categories||[])[0]||'Article';
-  const href=`blog/${post.slug}.html`;
+  const href=`blog-post.html?slug=${post.slug}`;
   return `
     <article class="post-card">
       <a class="post-card-img-wrap" href="${href}">

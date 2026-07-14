@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Ek Blink Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { font-size: 16px; scroll-behavior: smooth }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.6; overflow-x: hidden }
+    a { color: inherit; text-decoration: none }
+    img { display: block; max-width: 100% }
+
+    :root {
+      --bg: #050505; --surface: #0D0D0D; --border: #1A1A1A;
+      --text: #F0EBE1; --dim: #4A4A4A;
+      --lime: #C3FF00; --nav-h: 72px; --ease: cubic-bezier(0.22,1,0.36,1);
+      --body-w: 740px;
+    }
+
+    /* ── Cursor ── */
+    * { cursor: none }
+    #cursor { position: fixed; top: 0; left: 0; width: 12px; height: 12px; background: var(--lime); border-radius: 50%; border: 1.5px solid transparent; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s var(--ease), height .2s var(--ease), background .2s, border-color .2s; will-change: left,top }
+    #cursor.hover { width: 38px; height: 38px; background: transparent; border-color: var(--lime) }
+    @media(hover:none){ #cursor { display:none } * { cursor: auto } }
+
+    /* ── Blink ── */
+    .blink-lid { position: fixed; left: 0; width: 100%; height: 70vh; z-index: 99990; pointer-events: none }
+    #blink-top { top: 0 } #blink-bottom { bottom: 0 }
+    #blink-logo-wrap { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 99991; pointer-events: none }
+    #blink-logo { font: 800 clamp(1rem,2vw,1.45rem)/1 'Syne',sans-serif; letter-spacing: -.02em; color: #F0EBE1; opacity: 0; user-select: none; white-space: nowrap }
+    #blink-logo .bl { color: #C3FF00 }
+
+    /* ── Navbar ── */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; transition: background .4s, border-color .4s }
+    #navbar.scrolled { background: rgba(5,5,5,.94); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px) }
+    .nav-logo-img { height: 34px; width: auto; display: block }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem }
+    .nav-link { font-size: .85rem; color: var(--dim); transition: color .25s; position: relative }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--lime); transition: width .3s var(--ease) }
+    .nav-link:hover { color: var(--text) }
+    .nav-link:hover::after, .nav-link.active::after { width: 100% }
+    .nav-link.active { color: var(--lime) }
+    .hamburger { width: 46px; height: 46px; border: 1px solid var(--border); border-radius: 50%; background: transparent; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; position: relative; overflow: hidden }
+    .hamburger::before, .hamburger::after { content: ''; position: absolute; left: 0; right: 0; background: var(--lime); z-index: 0; transition: transform .3s var(--ease) }
+    .hamburger::before { top: 0; height: 51%; transform: scaleY(0); transform-origin: top }
+    .hamburger::after { bottom: 0; height: 51%; transform: scaleY(0); transform-origin: bottom }
+    .hamburger:hover::before, .hamburger:hover::after { transform: scaleY(1) }
+    .ham-line { width: 18px; height: 1.5px; background: var(--text); border-radius: 1px; display: block; position: relative; z-index: 1; transition: transform .35s var(--ease), opacity .25s, background .3s }
+    .hamburger:hover .ham-line { background: #050505 }
+    .hamburger.open .ham-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg) }
+    .hamburger.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0) }
+    .hamburger.open .ham-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg) }
+    #nav-drop { position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(5,5,5,.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 800; clip-path: inset(0 0 100% 0); transition: clip-path .45s var(--ease) }
+    #nav-drop.open { clip-path: inset(0 0 0% 0) }
+    .nav-drop-inner { padding: 1.5rem 2rem; display: flex; flex-direction: column }
+    .drop-link { font: 700 clamp(1.6rem,3vw,2.4rem)/1 'Syne',sans-serif; letter-spacing: -.02em; color: rgba(240,235,225,.45); padding: .65rem 1rem; border-bottom: 1px solid var(--border); transition: color .2s, background .25s var(--ease), padding-left .3s var(--ease) }
+    .drop-link:first-child { border-top: 1px solid var(--border) }
+    .drop-link:hover { color: #050505; background: var(--lime); padding-left: 2rem }
+
+    /* ── Page skeleton ── */
+    #page-skeleton{position:fixed;inset:0;z-index:99985;background:#050505;pointer-events:none;transition:opacity .55s ease;opacity:0}
+    .sk-bar{background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 100%);background-size:200% 100%;animation:sk-shimmer 1.5s ease-in-out infinite;border-radius:3px}
+    @keyframes sk-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ── Post hero ── */
+    #post-hero {
+      position: relative;
+      width: 100%;
+      min-height: 72vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    #post-hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: transform 8s ease;
+    }
+    #post-hero-img.loaded { transform: scale(1.04) }
+    #post-hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,5,5,.95) 0%, rgba(5,5,5,.55) 50%, rgba(5,5,5,.2) 100%);
+      z-index: 1;
+    }
+    #post-hero-no-img {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+      z-index: 0;
+    }
+    .post-hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h) + 6rem) 2rem 4rem;
+    }
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+      transition: color .2s, gap .2s var(--ease);
+      cursor: pointer;
+    }
+    .post-back:hover { color: var(--lime); gap: .75rem }
+    .post-back svg { transition: transform .2s var(--ease) }
+    .post-back:hover svg { transform: translateX(-3px) }
+    .post-kicker { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; flex-wrap: wrap }
+    .post-cat {
+      font-size: .66rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--lime); border: 1px solid rgba(195,255,0,.3); border-radius: 100px; padding: .25rem .7rem;
+    }
+    .post-date { font-size: .8rem; color: var(--dim); font-weight: 300 }
+    .post-read-time { font-size: .8rem; color: var(--dim); font-weight: 300 }
+    .post-read-time::before { content: '·'; margin-right: .5rem }
+    #post-title {
+      font: 800 clamp(2.4rem,5.5vw,4.5rem)/.92 'Syne', sans-serif;
+      letter-spacing: -.035em;
+      color: var(--text);
+      text-wrap: balance;
+      margin-bottom: 1.5rem;
+    }
+    .post-excerpt {
+      font: 300 clamp(.95rem,1.2vw,1.05rem)/1.75 'DM Sans', sans-serif;
+      color: rgba(240,235,225,.5);
+      max-width: 60ch;
+    }
+    .post-author-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .post-author-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(195,255,0,.08);
+      border: 1px solid rgba(195,255,0,.2);
+      display: flex; align-items: center; justify-content: center;
+      font: 700 .85rem/1 'Syne', sans-serif;
+      color: var(--lime);
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+    .post-author-name { font-size: .88rem; font-weight: 500; color: rgba(240,235,225,.7) }
+    .post-author-label { font-size: .75rem; color: var(--dim); font-weight: 300 }
+
+    /* ── Post body ── */
+    #post-body-wrap {
+      max-width: var(--body-w);
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+    .post-body { font: 300 1.08rem/1.85 'DM Sans', sans-serif; color: rgba(240,235,225,.78) }
+    .post-body p { margin-bottom: 1.75rem }
+    .post-body p:last-child { margin-bottom: 0 }
+    .post-body h2 {
+      font: 700 clamp(1.6rem,3vw,2.2rem)/.95 'Syne', sans-serif;
+      letter-spacing: -.025em; color: var(--text);
+      margin: 3rem 0 1.25rem;
+    }
+    .post-body h3 {
+      font: 700 clamp(1.2rem,2.2vw,1.6rem)/1 'Syne', sans-serif;
+      letter-spacing: -.02em; color: var(--text);
+      margin: 2.5rem 0 1rem;
+    }
+    .post-body h4 {
+      font: 600 1rem/1.2 'Syne', sans-serif;
+      letter-spacing: -.01em; color: rgba(240,235,225,.85);
+      margin: 2rem 0 .75rem;
+    }
+    .post-body strong { font-weight: 500; color: var(--text) }
+    .post-body em { font-style: italic; color: rgba(240,235,225,.9) }
+    .post-body a { color: var(--lime); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; transition: opacity .2s }
+    .post-body a:hover { opacity: .75 }
+    .post-body code {
+      font-family: 'Courier New', monospace; font-size: .88em;
+      background: rgba(195,255,0,.07); color: var(--lime);
+      padding: .15em .4em; border-radius: 3px;
+    }
+    .post-body pre {
+      background: #0d0d0d; border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.5rem; margin: 2rem 0;
+      overflow-x: auto;
+    }
+    .post-body pre code { background: none; padding: 0; font-size: .88rem; color: rgba(240,235,225,.7) }
+    .post-body blockquote {
+      border-left: 2px solid var(--lime);
+      padding: .75rem 0 .75rem 1.75rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: rgba(240,235,225,.55);
+    }
+    .post-body ul, .post-body ol { padding-left: 1.5rem; margin-bottom: 1.75rem }
+    .post-body li { margin-bottom: .5rem }
+    .post-body ul li::marker { color: var(--lime) }
+    .post-body ol li::marker { color: var(--lime); font-weight: 500 }
+    .post-body figure { margin: 2.5rem 0 }
+    .post-body figure img { width: 100%; border-radius: 4px; border: 1px solid var(--border) }
+    .post-body figcaption { font-size: .8rem; color: var(--dim); text-align: center; margin-top: .65rem }
+    .post-divider { height: 1px; background: var(--border); margin: 4rem 0; position: relative }
+    .post-divider::after { content: ''; position: absolute; left: 0; top: 0; width: 60px; height: 1px; background: var(--lime) }
+
+    /* ── Error / loading states ── */
+    #post-state {
+      max-width: var(--body-w);
+      margin: 0 auto;
+      padding: 8rem 2rem;
+      text-align: center;
+    }
+    .state-title { font: 700 1.6rem/1 'Syne', sans-serif; color: rgba(240,235,225,.15); margin-bottom: 1rem }
+    .state-body { font-size: .95rem; color: var(--dim); line-height: 1.7 }
+    .state-body a { color: var(--lime); text-decoration: underline }
+
+    /* Post hero skeleton */
+    .ph-hero { min-height: 72vh; display: flex; align-items: flex-end; padding: calc(var(--nav-h) + 4rem) 2rem 4rem }
+    .ph-hero-inner { width: 100%; max-width: 900px; margin: 0 auto }
+    .ph-body-wrap { max-width: var(--body-w); margin: 0 auto; padding: 5rem 2rem }
+    .skel { background: linear-gradient(90deg,#111 25%,#1c1c1c 50%,#111 75%); background-size: 400% 100%; animation: skel-shimmer 2s ease-in-out infinite; border-radius: 4px }
+    @keyframes skel-shimmer { 0%,100% { background-position: 100% 0 } 50% { background-position: -100% 0 } }
+
+    /* ── CTA section ── */
+    #contact-cta { position: relative; overflow: hidden; border-top: 1px solid var(--border) }
+    .cta-blob { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: var(--lime); filter: blur(180px); opacity: .04; top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none }
+    .cta-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 8rem 2rem; text-align: center }
+    .cta-h2 { font: 800 clamp(2rem,5vw,4rem)/.92 'Syne',sans-serif; letter-spacing: -.035em; margin-bottom: 1.25rem; text-wrap: balance }
+    .cta-sub { font-size: clamp(.9rem,1.2vw,1rem); color: rgba(240,235,225,.45); line-height: 1.7; max-width: 46ch; margin: 0 auto 2.5rem; font-weight: 300 }
+    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap }
+    .btn-cta { display: inline-flex; align-items: center; gap: .6rem; background: var(--lime); color: #050505; font: 600 .82rem/1 'DM Sans',sans-serif; letter-spacing: .08em; text-transform: uppercase; padding: .95rem 2rem; border-radius: 100px; transition: gap .25s var(--ease), transform .2s var(--ease), box-shadow .2s }
+    .btn-cta:hover { gap: 1rem; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(195,255,0,.25) }
+    .btn-ghost { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--border); color: rgba(240,235,225,.55); font: 500 .82rem/1 'DM Sans',sans-serif; letter-spacing: .08em; text-transform: uppercase; padding: .95rem 1.75rem; border-radius: 100px; transition: border-color .25s, color .25s }
+    .btn-ghost:hover { border-color: rgba(240,235,225,.3); color: var(--text) }
+
+    /* ── Social stage ── */
+    #social-stage { position: relative; height: 200px; overflow: hidden; border-top: 1px solid var(--border) }
+    .social-icon { position: absolute; width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); color: #666; will-change: left,top; z-index: 10; opacity: 0; transition: background .25s, border-color .25s, color .25s }
+    .social-icon:hover { background: rgba(255,255,255,.08); border-color: var(--si-color,var(--lime)); color: var(--si-color,var(--lime)) }
+    .si-inner { transition: transform .15s var(--ease); pointer-events: none; display: flex; align-items: center; justify-content: center; width: 100%; height: 100% }
+    .social-icon svg { width: 22px; height: 22px; pointer-events: none }
+    .stage-label { position: absolute; top: .75rem; left: 50%; transform: translateX(-50%); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(240,235,225,.1); font-weight: 500; white-space: nowrap; pointer-events: none; user-select: none }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto }
+    .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 4rem; margin-bottom: 4rem }
+    .footer-logo { font: 800 1.05rem/1 'Syne',sans-serif; letter-spacing: -.02em; margin-bottom: 1rem }
+    .footer-logo span { color: var(--lime) }
+    .footer-tagline { font-size: .85rem; color: var(--dim); line-height: 1.65; max-width: 28ch; font-weight: 300 }
+    .footer-col-title { font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 1.5rem }
+    .footer-links { display: flex; flex-direction: column; gap: .7rem }
+    .footer-link { font-size: .88rem; color: rgba(240,235,225,.45); transition: color .2s; font-weight: 300 }
+    .footer-link:hover { color: var(--text) }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border) }
+    .footer-copy { font-size: .75rem; color: var(--dim) }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem }
+    .fs-link { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #383838; border: 1px solid var(--border); border-radius: 50%; transition: color .3s var(--ease), border-color .3s var(--ease), transform .2s var(--ease) }
+    .fs-link:hover { transform: scale(1.12) }
+    .fs-ig:hover { color: #E1306C; border-color: rgba(225,48,108,.45) }
+    .fs-li:hover { color: #0A66C2; border-color: rgba(10,102,194,.45) }
+    .fs-yt:hover { color: #FF0000; border-color: rgba(255,0,0,.45) }
+    .fs-fb:hover { color: #1877F2; border-color: rgba(24,119,242,.45) }
+
+    /* ── Mobile ── */
+    @media(max-width:960px){ .nav-links{display:none} }
+    @media(max-width:600px){
+      .post-hero-content{padding:calc(var(--nav-h)+4rem) 1.5rem 3rem}
+      #post-title{font-size:clamp(2rem,9vw,3rem)}
+      #post-body-wrap{padding:3.5rem 1.5rem 4rem}
+      .post-body{font-size:1rem}
+      .post-body h2{font-size:clamp(1.4rem,7vw,1.8rem)}
+      footer{padding:3.5rem 1.5rem 2rem}
+      .footer-grid{grid-template-columns:1fr!important;gap:2.5rem}
+      .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
+      #social-stage{height:150px}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+
+  <svg id="blink-top" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 0 H 100 V 100 A 50 28.6 0 0 0 0 100 Z" fill="#1c1c1c"/></svg>
+  <svg id="blink-bottom" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 100 H 100 V 0 A 50 28.6 0 0 1 0 0 Z" fill="#1c1c1c"/></svg>
+  <div id="blink-logo-wrap" aria-hidden="true"><span id="blink-logo">Ek Blink<span class="bl">.</span></span></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <nav id="navbar" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="Ek Blink Solutions" class="nav-logo-img"></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="work.html" class="nav-link">Work</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+    <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+    </button>
+  </nav>
+
+  <div id="nav-drop" aria-hidden="true">
+    <div class="nav-drop-inner">
+      <a href="index.html" class="drop-link">Home</a>
+      <a href="services.html" class="drop-link">Services</a>
+      <a href="work.html" class="drop-link">Work</a>
+      <a href="about.html" class="drop-link">About</a>
+      <a href="blog.html" class="drop-link">Blog</a>
+      <a href="contact.html" class="drop-link">Contact</a>
+    </div>
+  </div>
+
+  <div id="page-skeleton" aria-hidden="true">
+    <div style="position:absolute;top:calc(var(--nav-h,72px) + 12%);left:2rem;right:2rem;max-width:900px">
+      <div class="sk-bar" style="height:3px;width:100px;margin-bottom:3rem;opacity:.4"></div>
+      <div class="sk-bar" style="height:clamp(2.4rem,7vw,5rem);width:84%;margin-bottom:.9rem"></div>
+      <div class="sk-bar" style="height:clamp(2.4rem,7vw,5rem);width:66%;margin-bottom:2.25rem"></div>
+      <div class="sk-bar" style="height:.95rem;width:50%;margin-bottom:.55rem;opacity:.45"></div>
+      <div class="sk-bar" style="height:.95rem;width:38%;margin-bottom:2.25rem;opacity:.45"></div>
+    </div>
+  </div>
+
+  <!-- ── Post hero ── -->
+  <header id="post-hero">
+    <div id="post-hero-no-img"></div>
+    <img id="post-hero-img" alt="" style="display:none">
+    <div id="post-hero-gradient"></div>
+    <div class="post-hero-content" id="post-hero-content">
+      <!-- Skeleton while loading -->
+      <div id="post-hero-skel">
+        <div style="height:14px;width:80px;margin-bottom:2.5rem" class="skel"></div>
+        <div style="height:clamp(2rem,5vw,3.5rem);width:88%;margin-bottom:.75rem" class="skel"></div>
+        <div style="height:clamp(2rem,5vw,3.5rem);width:72%;margin-bottom:1.75rem" class="skel"></div>
+        <div style="height:14px;width:50%;margin-bottom:.5rem;opacity:.6" class="skel"></div>
+        <div style="height:14px;width:38%;opacity:.6" class="skel"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Post body ── -->
+  <main id="post-body-wrap">
+    <div id="post-state" style="display:none"></div>
+    <article class="post-body" id="post-body" style="display:none"></article>
+  </main>
+
+  <!-- ── CTA ── -->
+  <section id="contact-cta">
+    <div class="cta-blob" aria-hidden="true"></div>
+    <div class="cta-inner">
+      <h2 class="cta-h2">Ready to build<br>something <em style="font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--lime)">remarkable?</em></h2>
+      <p class="cta-sub">Tell us what you're working on. We'll tell you how we can make it extraordinary.</p>
+      <div class="cta-actions">
+        <a href="contact.html" class="btn-cta">Start a conversation <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></a>
+        <a href="work.html" class="btn-ghost">See our work</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Social stage ── -->
+  <div id="social-stage" aria-label="Find us on social media">
+    <span class="stage-label" aria-hidden="true">Follow us</span>
+    <a class="social-icon" id="si-ig" href="https://www.instagram.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Instagram" style="--si-color:#E1306C">
+      <div class="si-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></div>
+    </a>
+    <a class="social-icon" id="si-li" href="https://www.linkedin.com/company/ekblinksolutions/" target="_blank" rel="noopener" aria-label="LinkedIn" style="--si-color:#0A66C2">
+      <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+    </a>
+    <a class="social-icon" id="si-yt" href="https://www.youtube.com/@ekblinksolutions4191" target="_blank" rel="noopener" aria-label="YouTube" style="--si-color:#FF0000">
+      <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="var(--bg,#050505)" points="10 15 15.5 12 10 9"/></svg></div>
+    </a>
+    <a class="social-icon" id="si-fb" href="https://www.facebook.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Facebook" style="--si-color:#1877F2">
+      <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+    </a>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Ek Blink<span>.</span></div>
+        <p class="footer-tagline">One studio. Every dimension of your brand.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/ekblinksolutions" class="fs-link fs-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.linkedin.com/company/ekblinksolutions/" class="fs-link fs-li" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://www.youtube.com/@ekblinksolutions4191" class="fs-link fs-yt" target="_blank" rel="noopener" aria-label="YouTube"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="#050505" points="10 15 15.5 12 10 9"/></svg></a>
+          <a href="https://www.facebook.com/ekblinksolutions" class="fs-link fs-fb" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <div class="footer-links">
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="services.html" class="footer-link">Services</a>
+          <a href="work.html" class="footer-link">Work</a>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+          <a href="privacy.html" class="footer-link">Privacy Policy</a>
+          <a href="terms.html" class="footer-link">Terms &amp; Conditions</a>
+        </div>
+        <div style="margin-top:2rem">
+          <div class="footer-col-title">Contact</div>
+          <div class="footer-links">
+            <a href="mailto:ekblinksolutions@gmail.com" class="footer-link">ekblinksolutions@gmail.com</a>
+            <span class="footer-link" style="cursor:default">United Kingdom &amp; India</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; <span id="yr"></span> Ek Blink Solutions. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+  // ─────────────────────────────────────────────────────────────────────────
+  // SANITY CONFIG — replace YOUR_PROJECT_ID with your actual project ID
+  // from https://manage.sanity.io
+  // ─────────────────────────────────────────────────────────────────────────
+  const SANITY = {
+    projectId: 'YOUR_PROJECT_ID',
+    dataset:   'production',
+    apiVersion:'2023-01-01',
+  };
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function sanityUrl(query){
+    return `https://${SANITY.projectId}.api.sanity.io/v${SANITY.apiVersion}/data/query/${SANITY.dataset}?query=${encodeURIComponent(query)}`;
+  }
+
+  function imageUrl(ref, w, h){
+    if(!ref) return null;
+    const m = ref.match(/^image-(.+)-(\d+x\d+)-(\w+)$/);
+    if(!m) return null;
+    let url = `https://cdn.sanity.io/images/${SANITY.projectId}/${SANITY.dataset}/${m[1]}-${m[2]}.${m[3]}`;
+    const params = [];
+    if(w) params.push(`w=${w}`);
+    if(h) params.push(`h=${h}`);
+    if(params.length) url += '?' + params.join('&');
+    return url;
+  }
+
+  function fmtDate(str){
+    if(!str) return '';
+    return new Date(str).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  }
+
+  function initials(name){
+    if(!name) return 'EB';
+    return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  }
+
+  // ── Portable Text renderer ────────────────────────────────────────────────
+  function renderPortableText(blocks){
+    if(!blocks || !blocks.length) return '<p>No content.</p>';
+
+    const out = [];
+    let listBuf = [], listType = null;
+
+    function flushList(){
+      if(!listBuf.length) return;
+      const tag = listType === 'number' ? 'ol' : 'ul';
+      out.push(`<${tag}>${listBuf.join('')}</${tag}>`);
+      listBuf = []; listType = null;
+    }
+
+    function renderSpan(span, markDefs){
+      let t = span.text
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;');
+      if(!span.marks || !span.marks.length) return t;
+      const marks = [...span.marks];
+      // Handle annotations (links) first
+      marks.forEach(key => {
+        const def = (markDefs||[]).find(d => d._key === key);
+        if(def && def._type === 'link'){
+          const href = def.href || '#';
+          const ext = href.startsWith('http') ? ' target="_blank" rel="noopener"' : '';
+          t = `<a href="${href}"${ext}>${t}</a>`;
+        }
+      });
+      // Decorators
+      if(marks.includes('strong'))    t = `<strong>${t}</strong>`;
+      if(marks.includes('em'))        t = `<em>${t}</em>`;
+      if(marks.includes('underline')) t = `<u>${t}</u>`;
+      if(marks.includes('code'))      t = `<code>${t}</code>`;
+      if(marks.includes('strike-through')) t = `<s>${t}</s>`;
+      return t;
+    }
+
+    blocks.forEach(block => {
+      if(block._type === 'block'){
+        const inner = (block.children||[]).map(s => renderSpan(s, block.markDefs)).join('');
+
+        if(block.listItem){
+          if(listType && listType !== block.listItem) flushList();
+          listType = block.listItem;
+          listBuf.push(`<li>${inner}</li>`);
+          return;
+        }
+        flushList();
+
+        switch(block.style){
+          case 'h2': out.push(`<h2>${inner}</h2>`); break;
+          case 'h3': out.push(`<h3>${inner}</h3>`); break;
+          case 'h4': out.push(`<h4>${inner}</h4>`); break;
+          case 'blockquote': out.push(`<blockquote>${inner}</blockquote>`); break;
+          default: if(inner.trim()) out.push(`<p>${inner}</p>`);
+        }
+        return;
+      }
+
+      if(block._type === 'image'){
+        flushList();
+        const ref = block.asset?._ref || block.assetRef;
+        const src = imageUrl(ref, 1200);
+        if(src){
+          const alt = block.alt ? ` alt="${block.alt.replace(/"/g,'&quot;')}"` : ' alt=""';
+          const cap = block.caption ? `<figcaption>${block.caption}</figcaption>` : '';
+          out.push(`<figure><img src="${src}"${alt} loading="lazy">${cap}</figure>`);
+        }
+        return;
+      }
+
+      // Code blocks (if using code-input plugin)
+      if(block._type === 'code'){
+        flushList();
+        const lang = block.language ? ` data-lang="${block.language}"` : '';
+        const code = (block.code||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        out.push(`<pre${lang}><code>${code}</code></pre>`);
+        return;
+      }
+    });
+
+    flushList();
+    return out.join('\n');
+  }
+
+  // ── Blink intro ───────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    // Year
+    const yr = document.getElementById('yr');
+    if(yr) yr.textContent = new Date().getFullYear();
+
+    // Cursor
+    const cur = document.getElementById('cursor');
+    if(cur && window.matchMedia('(hover:hover)').matches){
+      document.addEventListener('mousemove', e => {
+        cur.style.left = e.clientX + 'px';
+        cur.style.top  = e.clientY + 'px';
+      });
+      document.querySelectorAll('a,button').forEach(el => {
+        el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+      });
+    }
+
+    // Navbar scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 10), {passive:true});
+
+    // Hamburger
+    const btn  = document.getElementById('hamburger-btn');
+    const drop = document.getElementById('nav-drop');
+    let open = false;
+    btn.addEventListener('click', () => {
+      open = !open;
+      btn.classList.toggle('open', open);
+      drop.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open);
+    });
+    drop.querySelectorAll('.drop-link').forEach(l => l.addEventListener('click', () => {
+      open = false; btn.classList.remove('open'); drop.classList.remove('open');
+      btn.setAttribute('aria-expanded', false);
+    }));
+
+    // Blink
+    if(typeof gsap !== 'undefined'){
+      gsap.set('#blink-top',    {yPercent:-100});
+      gsap.set('#blink-bottom', {yPercent:100});
+      gsap.set(['.nav-logo','.nav-link','.hamburger'], {opacity:0, y:-14});
+
+      const blink = gsap.timeline({
+        onComplete(){
+          ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id => {
+            const el = document.getElementById(id); if(el) el.remove();
+          });
+        }
+      });
+      blink
+        .to('#blink-top',    {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
+        .to('#blink-bottom', {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
+        .to('#blink-logo',   {opacity:1,    duration:.09}, .22)
+        .to('#blink-logo',   {opacity:0,    duration:.08}, .55)
+        .to('#blink-top',    {yPercent:-100,duration:.46, ease:'power3.out'}, .50)
+        .to('#blink-bottom', {yPercent:100, duration:.46, ease:'power3.out'}, .50)
+        .to('.nav-logo',     {opacity:1,y:0,duration:.6,  ease:'power3.out'}, .98)
+        .to('.nav-link',     {opacity:1,y:0,duration:.55, stagger:.04, ease:'power3.out'}, 1.03)
+        .to('.hamburger',    {opacity:1,y:0,duration:.5,  ease:'power3.out'}, 1.10);
+
+      setTimeout(() => {
+        ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id => {
+          const el = document.getElementById(id); if(el) el.remove();
+        });
+        document.querySelectorAll('.nav-logo,.nav-link,.hamburger').forEach(el => {
+          el.style.opacity='1'; el.style.transform='none';
+        });
+      }, 2200);
+    }
+
+    // Page skeleton (slow-load only)
+    (()=>{
+      const sk = document.getElementById('page-skeleton');
+      if(!sk) return;
+      if(performance.now() > 700){ sk.style.opacity = '1' }
+      new MutationObserver((_,obs) => {
+        if(!document.getElementById('blink-top')){
+          sk.style.opacity = '0'; setTimeout(() => sk.remove(), 550); obs.disconnect();
+        }
+      }).observe(document.body, {childList:true, subtree:true});
+    })();
+
+    // Lenis smooth scroll
+    (function(){
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';
+      s.async = true;
+      s.onload = () => {
+        try {
+          const l = new Lenis({lerp:.08, smoothWheel:true});
+          l.on('scroll', () => {});
+          (function raf(t){ l.raf(t); requestAnimationFrame(raf) })(0);
+          window.__lenis = l;
+        } catch(e){}
+      };
+      document.head.appendChild(s);
+    })();
+
+    // Social stage physics
+    (function(){
+      const stage = document.getElementById('social-stage');
+      if(!stage) return;
+      const icons = Array.from(stage.querySelectorAll('.social-icon'));
+      const W = () => stage.offsetWidth, H = () => stage.offsetHeight;
+      const R = 27;
+      const state = icons.map((_,i) => ({
+        x: W() * (.15 + i * .18),
+        y: H() * .5,
+        vx: (Math.random()-.5)*2.4,
+        vy: (Math.random()-.5)*1.8
+      }));
+      icons.forEach((el, i) => {
+        el.style.left = state[i].x - R + 'px';
+        el.style.top  = state[i].y - R + 'px';
+        setTimeout(() => gsap.to(el, {opacity:1, duration:.4}), 200 + i*80);
+      });
+      function tick(){
+        const w = W(), h = H();
+        state.forEach((s,i) => {
+          s.vy += .18;
+          s.x  += s.vx;
+          s.y  += s.vy;
+          if(s.x - R < 0){ s.x = R; s.vx = Math.abs(s.vx)*.82 }
+          if(s.x + R > w){ s.x = w-R; s.vx = -Math.abs(s.vx)*.82 }
+          if(s.y - R < 0){ s.y = R; s.vy = Math.abs(s.vy)*.82 }
+          if(s.y + R > h){ s.y = h-R; s.vy = -Math.abs(s.vy)*.88; s.vx *= .97 }
+          icons[i].style.left = s.x - R + 'px';
+          icons[i].style.top  = s.y - R + 'px';
+        });
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+
+    // Load the post
+    initPost();
+  });
+
+  // ── Fetch & render post ───────────────────────────────────────────────────
+  async function initPost(){
+    const params = new URLSearchParams(window.location.search);
+    const slug   = params.get('slug');
+
+    const heroContent = document.getElementById('post-hero-content');
+    const heroSkel    = document.getElementById('post-hero-skel');
+    const bodyWrap    = document.getElementById('post-body-wrap');
+    const bodyEl      = document.getElementById('post-body');
+    const stateEl     = document.getElementById('post-state');
+    const heroImg     = document.getElementById('post-hero-img');
+    const heroNoImg   = document.getElementById('post-hero-no-img');
+
+    function showState(title, msg){
+      heroSkel.remove();
+      stateEl.style.display = 'block';
+      stateEl.innerHTML = `<p class="state-title">${title}</p><p class="state-body">${msg}</p>`;
+    }
+
+    // Missing slug
+    if(!slug){
+      showState('No post specified.', '<a href="blog.html">← Back to blog</a>');
+      return;
+    }
+
+    // Project ID not set
+    if(SANITY.projectId === 'YOUR_PROJECT_ID'){
+      showState(
+        'Sanity not connected.',
+        `Add your Project ID to the <code>SANITY</code> config in this file and in <code>blog.html</code>. <br><br><a href="blog.html">← Back to blog</a>`
+      );
+      return;
+    }
+
+    try {
+      const q = `*[_type == "post" && slug.current == "${slug}"][0]{
+        _id, title,
+        "slug": slug.current,
+        publishedAt,
+        excerpt,
+        author,
+        readTime,
+        "imageRef": mainImage.asset._ref,
+        "imageAlt": mainImage.alt,
+        "categories": categories[]->title,
+        body[]{
+          ...,
+          _type == "image" => { ..., "assetRef": asset._ref }
+        }
+      }`;
+
+      const res  = await fetch(sanityUrl(q));
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { result: post } = await res.json();
+
+      if(!post){
+        showState('Post not found.', `We couldn't find a post with that slug.<br><br><a href="blog.html">← Back to blog</a>`);
+        return;
+      }
+
+      // Update page title
+      document.title = `${post.title} — Ek Blink Solutions`;
+
+      // Cover image
+      const imgRef = post.imageRef;
+      if(imgRef){
+        const src = imageUrl(imgRef, 1600);
+        heroImg.src = src;
+        heroImg.alt = post.imageAlt || post.title;
+        heroImg.style.display = 'block';
+        heroNoImg.style.display = 'none';
+        heroImg.onload = () => heroImg.classList.add('loaded');
+      }
+
+      // Build hero content
+      const cat  = (post.categories||[])[0] || 'Article';
+      const date = fmtDate(post.publishedAt);
+      const rt   = post.readTime ? `<span class="post-read-time">${post.readTime} min read</span>` : '';
+      const author = post.author || 'Ek Blink';
+
+      heroSkel.innerHTML = `
+        <a class="post-back" href="blog.html">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M3 7L6.5 3.5M3 7L6.5 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          All posts
+        </a>
+        <div class="post-kicker">
+          <span class="post-cat">${cat}</span>
+          ${date ? `<span class="post-date">${date}</span>` : ''}
+          ${rt}
+        </div>
+        <h1 id="post-title">${post.title}</h1>
+        ${post.excerpt ? `<p class="post-excerpt">${post.excerpt}</p>` : ''}
+        <div class="post-author-row">
+          <div class="post-author-avatar">${initials(author)}</div>
+          <div>
+            <div class="post-author-name">${author}</div>
+            <div class="post-author-label">Ek Blink Solutions</div>
+          </div>
+        </div>`;
+
+      // Render body
+      if(post.body && post.body.length){
+        bodyEl.innerHTML = renderPortableText(post.body);
+        bodyEl.style.display = 'block';
+
+        // Scroll-reveal for body elements
+        if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
+          gsap.registerPlugin(ScrollTrigger);
+          gsap.from('#post-body > *', {
+            opacity: 0, y: 20, duration: .55,
+            stagger: .06, ease: 'power3.out',
+            scrollTrigger: { trigger: '#post-body', start: 'top 85%' }
+          });
+        }
+      } else {
+        bodyEl.innerHTML = '<p style="color:var(--dim)">No content yet.</p>';
+        bodyEl.style.display = 'block';
+      }
+
+      // Animate hero content in
+      if(typeof gsap !== 'undefined'){
+        gsap.from('#post-hero-content > *', {opacity:0, y:18, duration:.6, stagger:.07, ease:'power3.out', delay:.1});
+      }
+
+    } catch(err){
+      console.error('Post fetch error:', err);
+      showState(
+        'Could not load post.',
+        `Check your Sanity config and CORS settings at <a href="https://manage.sanity.io" target="_blank">manage.sanity.io</a>.<br><br><a href="blog.html">← Back to blog</a>`
+      );
+    }
+  }
+  </script>
+</body>
+</html>
