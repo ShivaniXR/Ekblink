@@ -21,9 +21,9 @@
       --lime:#C3FF00;--electric:#3355FF;--violet:#8B5CF6;--coral:#FF4D4D;
       --cyan:#00D4FF;--pink:#FF2D87;--orange:#FF9500;--teal:#00D68F;
       --nav-h:72px;--ease:cubic-bezier(0.22,1,0.36,1);
-    }
 
-    /* ── Cursor ── */
+        }
+/* ── Cursor ── */
     *{cursor:none}
     #cursor{position:fixed;top:0;left:0;width:12px;height:12px;background:var(--lime);border-radius:50%;border:1.5px solid transparent;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),background .2s,border-color .2s;will-change:left,top}
     #cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
@@ -37,33 +37,32 @@
     #blink-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1rem,2vw,1.45rem);letter-spacing:-.02em;color:#F0EBE1;opacity:0;user-select:none;pointer-events:none;white-space:nowrap}
     #blink-logo .bl{color:#C3FF00}
 
-    /* ── Navbar ── */
-    #navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;transition:background .4s,border-color .4s}
-    #navbar.scrolled{background:rgba(5,5,5,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
-    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
-    .nav-logo span{color:var(--lime)}
-    .nav-logo-img{height:34px;width:auto;display:block}
-    .nav-links{display:flex;align-items:center;gap:2.5rem}
-    .nav-link{font-size:.85rem;color:var(--dim);transition:color .25s;position:relative}
-    .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--lime);transition:width .3s var(--ease)}
-    .nav-link:hover{color:var(--text)}.nav-link:hover::after,.nav-link.active::after{width:100%}
-    .nav-link.active{color:var(--lime)}
-    .hamburger{width:46px;height:46px;border:1px solid var(--border);border-radius:50%;background:transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;position:relative;overflow:hidden}
-    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0;right:0;background:var(--lime);z-index:0;transition:transform .3s var(--ease)}
-    .hamburger::before{top:0;height:51%;transform:scaleY(0);transform-origin:top}
-    .hamburger::after{bottom:0;height:51%;transform:scaleY(0);transform-origin:bottom}
-    .hamburger:hover::before,.hamburger:hover::after{transform:scaleY(1)}
-    .ham-line{width:18px;height:1.5px;background:var(--text);border-radius:1px;display:block;position:relative;z-index:1;transition:transform .35s var(--ease),opacity .25s,background .3s}
-    .hamburger:hover .ham-line{background:#050505}
-    .hamburger.open .ham-line:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
-    .hamburger.open .ham-line:nth-child(2){opacity:0;transform:scaleX(0)}
-    .hamburger.open .ham-line:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-    #nav-drop{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(5,5,5,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);z-index:800;clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease)}
-    #nav-drop.open{clip-path:inset(0 0 0% 0)}
-    .nav-drop-inner{padding:1.5rem 2rem;display:flex;flex-direction:column}
-    .drop-link{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-.02em;color:rgba(240,235,225,.45);padding:.65rem 1rem;border-bottom:1px solid var(--border);transition:color .2s,background .25s var(--ease),padding-left .3s var(--ease)}
-    .drop-link:first-child{border-top:1px solid var(--border)}
-    .drop-link:hover{color:#050505;background:var(--lime);padding-left:2rem}
+    /* ─── Navbar ─── */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; transition: background .4s, border-color .4s }
+    #navbar.scrolled { background: rgba(5,5,5,.94); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px) }
+    .nav-logo-img { height: 34px; width: auto; display: block }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem }
+    .nav-link { font-size: .85rem; color: var(--dim); transition: color .25s; position: relative }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--lime); transition: width .3s var(--ease) }
+    .nav-link:hover { color: var(--text) }
+    .nav-link:hover::after, .nav-link.active::after { width: 100% }
+    .nav-link.active { color: var(--lime) }
+    .hamburger { width: 46px; height: 46px; border: 1px solid var(--border); border-radius: 50%; background: transparent; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; position: relative; overflow: hidden }
+    .hamburger::before, .hamburger::after { content: ''; position: absolute; left: 0; right: 0; background: var(--lime); z-index: 0; transition: transform .3s var(--ease) }
+    .hamburger::before { top: 0; height: 51%; transform: scaleY(0); transform-origin: top }
+    .hamburger::after { bottom: 0; height: 51%; transform: scaleY(0); transform-origin: bottom }
+    .hamburger:hover::before, .hamburger:hover::after { transform: scaleY(1) }
+    .ham-line { width: 18px; height: 1.5px; background: var(--text); border-radius: 1px; display: block; position: relative; z-index: 1; transition: transform .35s var(--ease), opacity .25s, background .3s }
+    .hamburger:hover .ham-line { background: #050505 }
+    .hamburger.open .ham-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg) }
+    .hamburger.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0) }
+    .hamburger.open .ham-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg) }
+    #nav-drop { position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(5,5,5,.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 800; clip-path: inset(0 0 100% 0); transition: clip-path .45s var(--ease) }
+    #nav-drop.open { clip-path: inset(0 0 0% 0) }
+    .nav-drop-inner { padding: 1.5rem 2rem; display: flex; flex-direction: column }
+    .drop-link { font: 700 clamp(1.6rem, 3vw, 2.4rem)/1 'Syne', sans-serif; letter-spacing: -.02em; color: rgba(240,235,225,.45); padding: .65rem 1rem; border-bottom: 1px solid var(--border); transition: color .2s, background .25s var(--ease), padding-left .3s var(--ease) }
+    .drop-link:first-child { border-top: 1px solid var(--border) }
+    .drop-link:hover { color: #050505; background: var(--lime); padding-left: 2rem }
 
     /* ── Hero ── */
     #work-hero{position:relative;min-height:78vh;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--border)}
@@ -71,21 +70,13 @@
     .hero-inner{position:relative;z-index:2;padding:0 2rem;max-width:1200px;margin:0 auto;width:100%;padding-top:var(--nav-h)}
     .hero-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.6rem,5.5vw,5.5rem);letter-spacing:-.04em;line-height:.88;margin-bottom:2.5rem;text-wrap:balance}
     .hero-h1 em{font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--lime)}
-    .hero-sub-row{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
     .hero-sub{font-size:clamp(.9rem,1.4vw,1.05rem);color:var(--dim);max-width:52ch;line-height:1.75;font-weight:300}
     .hero-count{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,3.5vw,3.8rem);letter-spacing:-.04em;line-height:1;white-space:nowrap;opacity:.25}
     .hero-count span{display:block;font-size:.4em;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-family:'DM Sans',sans-serif;margin-top:.2em}
 
     /* ── Work items ── */
-    .wp-item{border-top:1px solid var(--border);padding:6rem 2rem;position:relative;overflow:hidden}
-    .wp-item:last-child{border-bottom:1px solid var(--border);margin-bottom:0}
+        .wp-item{position:relative;border-top:1px solid var(--border);overflow:hidden;padding:7rem 2rem}
     .wp-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:center;position:relative;z-index:2}
-    .wp-item.flip .wp-logo-panel{order:2}
-    .wp-item.flip .wp-info{order:1}
-
-    /* Ghost watermark - hidden */
-    .wp-ghost{display:none}
-
     /* Logo panel */
     .wp-logo-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px;gap:.9rem;text-decoration:none;border:1.5px solid transparent;border-radius:16px;padding:2rem;transition:border-color .35s var(--ease),box-shadow .35s var(--ease)}
     a.wp-logo-panel:hover,.wp-logo-panel:hover{border-color:var(--lime);box-shadow:0 0 28px rgba(195,255,0,.12),inset 0 0 20px rgba(195,255,0,.04)}
@@ -106,16 +97,13 @@
     /* Info column */
     .wp-info{display:flex;flex-direction:column}
     .wp-meta{display:flex;align-items:center;gap:.65rem;margin-bottom:1.4rem;flex-wrap:wrap}
-    .wp-num{font-size:.7rem;font-weight:400;letter-spacing:.16em;color:var(--dim);font-family:'DM Sans',sans-serif}
     .wp-tag{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.26rem .7rem;border-radius:100px;border:1px solid}
     .wp-tag.client{color:var(--lime);border-color:rgba(195,255,0,.3);background:rgba(195,255,0,.05)}
     .wp-tag.product{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 40%,transparent);background:color-mix(in srgb,var(--acc) 8%,transparent)}
     .wp-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,3.8vw,3.5rem);letter-spacing:-.035em;line-height:.95;margin-bottom:1.3rem}
     .wp-desc{font-size:.97rem;color:rgba(240,235,225,.5);line-height:1.8;font-weight:300;margin-bottom:1.8rem;max-width:42ch;transition:color .35s}
-    .wp-item:hover .wp-desc{color:rgba(240,235,225,.65)}
     .wp-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:2rem}
     .wp-chip{font-size:.7rem;font-weight:400;letter-spacing:.05em;padding:.26rem .65rem;border:1px solid var(--border);border-radius:100px;color:var(--dim);transition:border-color .3s,color .3s}
-    .wp-item:hover .wp-chip{border-color:color-mix(in srgb,var(--acc) 35%,var(--border));color:rgba(240,235,225,.6)}
     .wp-link{display:inline-flex;align-items:center;gap:.45rem;font-size:.88rem;font-weight:500;color:var(--acc);transition:gap .25s var(--ease)}
     .wp-link:hover{gap:.85rem}
     .wp-coming{display:inline-flex;align-items:center;gap:.45rem;font-size:.85rem;color:var(--dim);font-weight:300;font-style:italic}
@@ -146,16 +134,7 @@
     .footer-copy{font-size:.75rem;color:var(--dim)}
 
     
-      .wp-item.flip .wp-logo-panel{order:0}
-      .wp-item.flip .wp-info{order:0}
-      .wp-ghost{font-size:35vw}
-      .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
-      .nav-links{display:none}
-    }
     
-      .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
-      .hero-sub-row{flex-direction:column;gap:1.5rem}
-    }}
   
     /* ── Social rail (sidebar) ── */
     /* ── Footer socials ── */
@@ -176,26 +155,23 @@
   
     /* ─── Responsive: shared ─── */
     @media(max-width:960px){
+      .wp-inner{grid-template-columns:1fr;gap:2.5rem}
       .nav-links{display:none}
     }
     @media(max-width:600px){
+      .wp-tags{flex-wrap:wrap}
+
       footer{padding:3.5rem 1.5rem 2rem}
       .footer-grid{grid-template-columns:1fr!important;gap:2.5rem}
       .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
     }
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-    @media(max-width:960px){
-      .wp-inner{grid-template-columns:1fr;gap:2.5rem}
-      .wp-item.flip .wp-logo-panel{order:0}
-      .wp-item.flip .wp-info{order:0}
-      .wp-ghost{font-size:35vw}
-    }
     @media(max-width:600px){
+      .wp-tags{flex-wrap:wrap}
+
       .section{padding:5rem 1.5rem}
-      .wp-item{padding:4rem 1.5rem}
       .hero-sub-row{flex-direction:column;gap:1.5rem}
       #work-hero{padding:calc(var(--nav-h)+2.5rem) 1.5rem 3.5rem}
-      .wp-tags{flex-wrap:wrap}
     }
   </style>
 </head>
@@ -262,7 +238,6 @@
 
   <!-- Dream Voyage 360 -->
   <div class="wp-item" id="proj-dv360" style="--acc: #C3FF00" data-tags="client website logo-design brand-identity immersive">
-    <div class="wp-ghost" aria-hidden="true">01</div>
     <div class="wp-inner">
       <a class="wp-logo-panel" href="https://dreamvoyage360.com" target="_blank" rel="noopener" aria-label="Visit Dream Voyage 360">
         <img src="client logos/dreamvoyage360.png" alt="Dream Voyage 360" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -286,7 +261,6 @@
 
   <!-- Resonant Morphologies / Sanctuary of Creation -->
   <div class="wp-item flip" id="proj-soc" style="--acc: #C3FF00" data-tags="client immersive video audio">
-    <div class="wp-ghost" aria-hidden="true">02</div>
     <div class="wp-inner">
       <a class="wp-logo-panel" href="https://www.sanctuaryofcreation.co.uk" target="_blank" rel="noopener" aria-label="Visit Sanctuary of Creation">
         <img src="https://images.squarespace-cdn.com/content/v1/67b90361cb4968452d505a91/7a007332-2051-4161-8e18-b2c2310c61a9/NEW+SOC+LOGO.png?format=1500w" alt="Sanctuary of Creation" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -311,7 +285,6 @@
 
   <!-- Between the Lines -->
   <div class="wp-item" id="proj-btl" style="--acc: #C3FF00" data-tags="client website brand-identity">
-    <div class="wp-ghost" aria-hidden="true">03</div>
     <div class="wp-inner">
 
       <a class="wp-logo-panel" href="https://betweenthelines.space" target="_blank" rel="noopener" aria-label="Visit Between the Lines">
@@ -342,7 +315,6 @@
 
   <!-- Fresh Crunch -->
   <div class="wp-item flip" id="proj-freshcrunch" style="--acc: #C3FF00" data-tags="client website brand-identity ecommerce">
-    <div class="wp-ghost" aria-hidden="true">04</div>
     <div class="wp-inner">
       <a class="wp-logo-panel" href="https://freshcrunch.co.uk" target="_blank" rel="noopener" aria-label="Visit Fresh Crunch">
         <img src="client logos/FreshCrunch logo.png" alt="Fresh Crunch" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -366,7 +338,6 @@
 
   <!-- WealthON -->
   <div class="wp-item" id="proj-wealthon" style="--acc: #C3FF00" data-tags="product website fintech">
-    <div class="wp-ghost" aria-hidden="true">05</div>
     <div class="wp-inner">
       <a class="wp-logo-panel" href="https://www.wealthon.cloud" target="_blank" rel="noopener" aria-label="Visit WealthON">
         <img src="client logos/WealthON logo.png" alt="WealthON" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -390,7 +361,6 @@
 
   <!-- WealthNap -->
   <div class="wp-item flip" id="proj-wealthnap" style="--acc: #C3FF00" data-tags="product website fintech">
-    <div class="wp-ghost" aria-hidden="true">06</div>
     <div class="wp-inner">
       <a class="wp-logo-panel" href="https://wealthnap.in" target="_blank" rel="noopener" aria-label="Visit WealthNap">
         <img src="client logos/WealthNap logo.png" alt="WealthNap" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -414,7 +384,6 @@
 
   <!-- StopApp -->
   <div class="wp-item" id="proj-stopapp" style="--acc: #C3FF00" data-tags="product app">
-    <div class="wp-ghost" aria-hidden="true">07</div>
     <div class="wp-inner">
       <div class="wp-logo-panel">
         <img src="client logos/StopApp logo.png" alt="StopApp" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -438,7 +407,6 @@
 
   <!-- Crystal Step -->
   <div class="wp-item flip" id="proj-crystalstep" style="--acc: #C3FF00" data-tags="client logo-design brand-identity">
-    <div class="wp-ghost" aria-hidden="true">08</div>
     <div class="wp-inner">
       <div class="wp-logo-panel">
         <img src="client logos/Crystal Step.jpg" alt="Crystal Step" class="wp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -618,7 +586,6 @@ window.addEventListener('scroll',()=>{
   document.querySelectorAll('.wp-item').forEach(item=>{
     const logoPanel=item.querySelector('.wp-logo-panel');
     const info=item.querySelector('.wp-info');
-    const ghost=item.querySelector('.wp-ghost');
 
     // Reveal columns on scroll
     if(logoPanel){
@@ -633,15 +600,6 @@ window.addEventListener('scroll',()=>{
         {opacity:0,y:36},
         {opacity:1,y:0,duration:.75,delay:.1,ease:'power3.out',
          scrollTrigger:{trigger:item,start:'top 82%',once:true}}
-      );
-    }
-
-    // Ghost parallax
-    if(ghost){
-      gsap.fromTo(ghost,
-        {x:'4%'},
-        {x:'-3%',ease:'none',
-         scrollTrigger:{trigger:item,start:'top bottom',end:'bottom top',scrub:1.2}}
       );
     }
   });

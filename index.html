@@ -21,9 +21,9 @@
       --lime:#C3FF00;--electric:#3355FF;--violet:#8B5CF6;--coral:#FF4D4D;
       --cyan:#00D4FF;--pink:#FF2D87;--orange:#FF9500;--teal:#00D68F;
       --nav-h:72px;--ease:cubic-bezier(0.22,1,0.36,1);
-    }
 
-    /* ── Cursor ── */
+        }
+/* ── Cursor ── */
     *{cursor:none}
     #cursor{
       position:fixed;top:0;left:0;width:12px;height:12px;
@@ -31,8 +31,8 @@
       pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
       transition:width .2s var(--ease),height .2s var(--ease),background .2s,border-color .2s;
       will-change:left,top;
-    }
-    #cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
+        }
+#cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
     @media(hover:none){#cursor{display:none}*{cursor:auto}}
 
     /* ── Blink lids - start OFFSCREEN, GSAP closes/opens them ── */
@@ -42,33 +42,32 @@
     #blink-logo-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99991;pointer-events:none}
     #blink-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1rem,2vw,1.45rem);letter-spacing:-.02em;color:#F0EBE1;opacity:0;user-select:none;pointer-events:none;white-space:nowrap}
     #blink-logo .bl{color:#C3FF00}
-    /* ── Navbar ── */
-    #navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;transition:background .4s,border-color .4s}
-    #navbar.scrolled{background:rgba(5,5,5,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
-    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
-    .nav-logo span{color:var(--lime)}
-    .nav-logo-img{height:34px;width:auto;display:block}
-    .nav-links{display:flex;align-items:center;gap:2.5rem}
-    .nav-link{font-size:.85rem;color:var(--dim);transition:color .25s;position:relative}
-    .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--lime);transition:width .3s var(--ease)}
-    .nav-link:hover{color:var(--text)}.nav-link:hover::after,.nav-link.active::after{width:100%}
-    .nav-link.active{color:var(--lime)}
-    .hamburger{width:46px;height:46px;border:1px solid var(--border);border-radius:50%;background:transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;position:relative;overflow:hidden}
-    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0;right:0;background:var(--lime);z-index:0;transition:transform .3s var(--ease)}
-    .hamburger::before{top:0;height:51%;transform:scaleY(0);transform-origin:top}
-    .hamburger::after{bottom:0;height:51%;transform:scaleY(0);transform-origin:bottom}
-    .hamburger:hover::before,.hamburger:hover::after{transform:scaleY(1)}
-    .ham-line{width:18px;height:1.5px;background:var(--text);border-radius:1px;display:block;position:relative;z-index:1;transition:transform .35s var(--ease),opacity .25s,background .3s}
-    .hamburger:hover .ham-line{background:#050505}
-    .hamburger.open .ham-line:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
-    .hamburger.open .ham-line:nth-child(2){opacity:0;transform:scaleX(0)}
-    .hamburger.open .ham-line:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-    #nav-drop{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(5,5,5,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);z-index:800;clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease)}
-    #nav-drop.open{clip-path:inset(0 0 0% 0)}
-    .nav-drop-inner{padding:1.5rem 2rem;display:flex;flex-direction:column}
-    .drop-link{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-.02em;color:rgba(240,235,225,.45);padding:.65rem 1rem;border-bottom:1px solid var(--border);transition:color .2s,background .25s var(--ease),padding-left .3s var(--ease)}
-    .drop-link:first-child{border-top:1px solid var(--border)}
-    .drop-link:hover{color:#050505;background:var(--lime);padding-left:2rem}
+    /* ─── Navbar ─── */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; transition: background .4s, border-color .4s }
+    #navbar.scrolled { background: rgba(5,5,5,.94); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px) }
+    .nav-logo-img { height: 34px; width: auto; display: block }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem }
+    .nav-link { font-size: .85rem; color: var(--dim); transition: color .25s; position: relative }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--lime); transition: width .3s var(--ease) }
+    .nav-link:hover { color: var(--text) }
+    .nav-link:hover::after, .nav-link.active::after { width: 100% }
+    .nav-link.active { color: var(--lime) }
+    .hamburger { width: 46px; height: 46px; border: 1px solid var(--border); border-radius: 50%; background: transparent; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; position: relative; overflow: hidden }
+    .hamburger::before, .hamburger::after { content: ''; position: absolute; left: 0; right: 0; background: var(--lime); z-index: 0; transition: transform .3s var(--ease) }
+    .hamburger::before { top: 0; height: 51%; transform: scaleY(0); transform-origin: top }
+    .hamburger::after { bottom: 0; height: 51%; transform: scaleY(0); transform-origin: bottom }
+    .hamburger:hover::before, .hamburger:hover::after { transform: scaleY(1) }
+    .ham-line { width: 18px; height: 1.5px; background: var(--text); border-radius: 1px; display: block; position: relative; z-index: 1; transition: transform .35s var(--ease), opacity .25s, background .3s }
+    .hamburger:hover .ham-line { background: #050505 }
+    .hamburger.open .ham-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg) }
+    .hamburger.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0) }
+    .hamburger.open .ham-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg) }
+    #nav-drop { position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(5,5,5,.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 800; clip-path: inset(0 0 100% 0); transition: clip-path .45s var(--ease) }
+    #nav-drop.open { clip-path: inset(0 0 0% 0) }
+    .nav-drop-inner { padding: 1.5rem 2rem; display: flex; flex-direction: column }
+    .drop-link { font: 700 clamp(1.6rem, 3vw, 2.4rem)/1 'Syne', sans-serif; letter-spacing: -.02em; color: rgba(240,235,225,.45); padding: .65rem 1rem; border-bottom: 1px solid var(--border); transition: color .2s, background .25s var(--ease), padding-left .3s var(--ease) }
+    .drop-link:first-child { border-top: 1px solid var(--border) }
+    .drop-link:hover { color: #050505; background: var(--lime); padding-left: 2rem }
 
     /* ── Hero ── */
     #hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
@@ -79,12 +78,10 @@
     .blink-cur{display:inline-block;width:3px;height:.85em;background:var(--lime);vertical-align:middle;margin-left:4px;animation:blink-cur 1.1s step-end infinite}
     @keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
     .hero-sub{font-size:clamp(1rem,1.5vw,1.15rem);color:var(--dim);max-width:52ch;line-height:1.7;margin-bottom:3rem;font-weight:300}
-    .hero-actions{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
     .btn-primary{display:inline-flex;align-items:center;gap:.5rem;background:var(--lime);color:#050505;font-weight:600;font-size:.9rem;padding:.85rem 2rem;border-radius:100px;transition:transform .2s var(--ease),box-shadow .2s}
     .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(195,255,0,.3)}
     .btn-ghost{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--border);color:var(--text);font-size:.9rem;padding:.85rem 2rem;border-radius:100px;transition:border-color .2s}
     .btn-ghost:hover{border-color:rgba(240,235,225,.5)}
-
 
     /* ── Shared sections ── */
     .section{padding:8rem 2rem;max-width:1200px;margin:0 auto}
@@ -92,7 +89,6 @@
     .about-tag{display:inline-block;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);border:1px solid rgba(195,255,0,.25);padding:.3rem .85rem;border-radius:100px;margin-bottom:2rem}
     .about-h2-xl{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(4rem,10vw,9rem);letter-spacing:-.04em;line-height:.88;margin:1.5rem 0 4rem}
     .about-h2-xl em{font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--lime)}
-    .about-cols{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-bottom:3rem}
     .about-cta-link{display:inline-flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:500;color:var(--lime);transition:gap .2s var(--ease)}
     .about-cta-link:hover{gap:.9rem}
     .about-body{font-size:1rem;color:rgba(240,235,225,.6);line-height:1.8;font-weight:300}
@@ -119,13 +115,7 @@
     .footer-copy{font-size:.75rem;color:var(--dim)}
 
     
-      .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
-      .nav-links{display:none}
-    }
     
-      .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
-      .hero-actions{flex-direction:column;align-items:flex-start}
-    }}
   
     /* ── Social rail (sidebar) ── */
     /* ── Footer socials ── */
