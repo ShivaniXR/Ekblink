@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Ek Blink Solutions</title>
+  <meta name="description" content="Ek Blink Solutions is a full-service creative and technology studio with studios in the UK and India. One brief, one team, all of it handled in-house.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    :root{
+      --bg:#050505;--surface:#0D0D0D;--border:#1E1E1E;--text:#F0EBE1;--dim:#555;
+      --lime:#C3FF00;--nav-h:72px;--ease:cubic-bezier(0.22,1,0.36,1);
+    }
+    *{cursor:none}
+    #cursor{position:fixed;top:0;left:0;width:12px;height:12px;background:var(--lime);border-radius:50%;border:1.5px solid transparent;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),background .2s,border-color .2s;will-change:left,top}
+    #cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
+    @media(hover:none){#cursor{display:none}*{cursor:auto}}
+    /* Blink lids */
+    .blink-lid{position:fixed;left:0;width:100%;height:70vh;z-index:99990;pointer-events:none;display:block}
+    #blink-top{top:0}
+    #blink-bottom{bottom:0}
+    #blink-logo-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99991;pointer-events:none}
+    #blink-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1rem,2vw,1.45rem);letter-spacing:-.02em;color:#F0EBE1;opacity:0;user-select:none;white-space:nowrap}
+    #blink-logo .bl{color:#C3FF00}    /* Nav */
+    #navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;transition:background .4s}
+    #navbar.scrolled{background:rgba(5,5,5,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
+    .nav-logo span{color:var(--lime)}
+    .nav-logo-img{height:34px;width:auto;display:block}
+    .nav-links{display:flex;align-items:center;gap:2.5rem}
+    .nav-link{font-size:.85rem;color:var(--dim);transition:color .25s;position:relative}
+    .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--lime);transition:width .3s var(--ease)}
+    .nav-link:hover{color:var(--text)}.nav-link:hover::after,.nav-link.active::after{width:100%}
+    .nav-link.active{color:var(--lime)}
+    .hamburger{width:46px;height:46px;border:1px solid var(--border);border-radius:50%;background:transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;position:relative;overflow:hidden}
+    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0;right:0;background:var(--lime);z-index:0;transition:transform .3s var(--ease)}
+    .hamburger::before{top:0;height:51%;transform:scaleY(0);transform-origin:top}
+    .hamburger::after{bottom:0;height:51%;transform:scaleY(0);transform-origin:bottom}
+    .hamburger:hover::before,.hamburger:hover::after{transform:scaleY(1)}
+    .ham-line{width:18px;height:1.5px;background:var(--text);border-radius:1px;display:block;position:relative;z-index:1;transition:transform .35s var(--ease),opacity .25s,background .3s}
+    .hamburger:hover .ham-line{background:#050505}
+    .hamburger.open .ham-line:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+    .hamburger.open .ham-line:nth-child(2){opacity:0;transform:scaleX(0)}
+    .hamburger.open .ham-line:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+    #nav-drop{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(5,5,5,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);z-index:800;clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease)}
+    #nav-drop.open{clip-path:inset(0 0 0% 0)}
+    .nav-drop-inner{padding:1.5rem 2rem;display:flex;flex-direction:column}
+    .drop-link{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-.02em;color:rgba(240,235,225,.45);padding:.65rem 1rem;border-bottom:1px solid var(--border);transition:color .2s,background .25s var(--ease),padding-left .3s var(--ease)}
+    .drop-link:first-child{border-top:1px solid var(--border)}
+    .drop-link:hover{color:#050505;background:var(--lime);padding-left:2rem}
+    /* Page hero */
+    #page-hero{padding:calc(var(--nav-h) + 5rem) 2rem 5rem;max-width:1200px;margin:0 auto}
+    .page-kicker{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem}
+    .page-kicker-line{width:32px;height:1px;background:var(--lime)}
+    .page-kicker-text{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+    .page-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.6rem,6vw,5rem);letter-spacing:-.03em;line-height:.95;margin-bottom:1.5rem;text-wrap:balance}
+    .page-h1 em{font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--lime)}
+    .page-sub{font-size:1.05rem;color:var(--dim);max-width:54ch;line-height:1.75;font-weight:300}
+    /* Sections */
+    .section{max-width:1200px;margin:0 auto;padding:6rem 2rem;border-top:1px solid var(--border)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+    .about-tag{display:inline-block;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);border:1px solid rgba(195,255,0,.25);padding:.3rem .85rem;border-radius:100px;margin-bottom:2rem}
+    .about-h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(2rem,3.5vw,3rem);letter-spacing:-.025em;line-height:1.1;margin-bottom:1.5rem}
+    .about-h2 em{font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300}
+    .about-body{font-size:.95rem;color:rgba(240,235,225,.6);line-height:1.8;margin-bottom:1.25rem;font-weight:300;max-width:48ch}
+    .about-link{display:inline-flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:500;color:var(--lime);margin-top:2rem;transition:gap .2s var(--ease)}
+    .about-link:hover{gap:.9rem}
+    #values{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .values-inner{max-width:1200px;margin:0 auto;padding:6rem 2rem}
+    .values-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,3.5vw,3rem);letter-spacing:-.025em;margin-bottom:4rem}
+    .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3rem}
+    .value-item{padding:2.5rem 0;border-top:1px solid var(--border)}
+    .value-num{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(195,255,0,.4);line-height:1;margin-bottom:1.5rem}
+    .value-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.85rem}
+    .value-body{font-size:.88rem;color:var(--dim);line-height:1.75;font-weight:300;max-width:32ch}
+    #team{border-top:1px solid var(--border)}
+    .team-inner{max-width:1200px;margin:0 auto;padding:6rem 2rem}
+    .team-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,3.5vw,3rem);letter-spacing:-.025em;margin-bottom:3rem}
+    .world-map-wrap{width:100%;margin-bottom:2.5rem}
+    #world-map-canvas{width:100%;height:auto;display:block}
+    .map-labels{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2.5rem}
+    .map-label{border-top:1px solid var(--border);padding-top:1.5rem;transition:border-color .3s var(--ease)}
+    .map-label.active{border-color:var(--lime)}
+    .map-label-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);margin-bottom:1rem}
+    .map-label-city{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:-.01em;margin-bottom:.4rem}
+    .map-label-region{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:.85rem;opacity:.55;transition:opacity .3s var(--ease)}
+    .map-label.active .map-label-region{opacity:1}
+    .map-label-body{font-size:.85rem;color:var(--dim);line-height:1.75;font-weight:300}
+    .mission-block{border-left:2px solid var(--lime);padding-left:1.5rem;margin-bottom:2.5rem}
+    .mission-label{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:.85rem}
+    .mission-text{font-size:.95rem;color:rgba(240,235,225,.65);line-height:1.85;font-weight:300;font-style:italic}
+    #about-cta{border-top:1px solid var(--border);position:relative;overflow:hidden}
+    .cta-blob{position:absolute;width:700px;height:700px;border-radius:50%;background:var(--lime);filter:blur(160px);opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+    .cta-inner{max-width:1200px;margin:0 auto;padding:10rem 2rem;text-align:center;position:relative;z-index:2}
+    .cta-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5.5vw,4.5rem);letter-spacing:-.03em;line-height:1;margin-bottom:1.5rem}
+    .cta-sub{font-size:1rem;color:var(--dim);max-width:50ch;margin:0 auto 3rem;line-height:1.7;font-weight:300}
+    .cta-actions{display:flex;justify-content:center;gap:1.25rem;flex-wrap:wrap}
+    .btn-primary{display:inline-flex;align-items:center;gap:.5rem;background:var(--lime);color:#050505;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;padding:1rem 2.5rem;border-radius:100px;transition:transform .2s var(--ease),box-shadow .2s}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(195,255,0,.3)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--border);color:var(--text);font-size:.95rem;padding:1rem 2.5rem;border-radius:100px;transition:border-color .2s}
+    .btn-ghost:hover{border-color:rgba(240,235,225,.5)}
+    footer{border-top:1px solid var(--border);padding:5rem 2rem 3rem;max-width:1200px;margin:0 auto}
+    .footer-copy{font-size:.75rem;color:var(--dim)}
+    .footer-link{font-size:.75rem;color:var(--dim);transition:color .2s}
+    .footer-link:hover{color:var(--text)}}
+  
+    /* ── Social rail (sidebar) ── */
+    /* ── Footer socials ── */
+  
+    /* ── Footer social stage (physics) ── */
+    #social-stage{position:relative;height:200px;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .social-icon{position:absolute;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#666;will-change:left,top;z-index:10;opacity:0;transition:background .25s,border-color .25s,color .25s}
+    .social-icon:hover{background:rgba(255,255,255,.08);border-color:var(--si-color,var(--lime));color:var(--si-color,var(--lime))}
+    .social-icon:hover .si-inner{transform:scale(1.1)}
+    .si-inner{transition:transform .15s var(--ease);pointer-events:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+    .social-icon svg{width:22px;height:22px;pointer-events:none}
+    .stage-label{position:absolute;top:.75rem;left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,235,225,.12);font-weight:500;white-space:nowrap;pointer-events:none;user-select:none}
+  
+    .footer-legal{display:flex;align-items:center;gap:.75rem}
+    .footer-legal-link{font-size:.75rem;color:var(--dim);transition:color .2s}
+    .footer-legal-link:hover{color:var(--text)}
+    .footer-legal-sep{color:var(--dim);opacity:.35;font-size:.75rem}
+  
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
+    .footer-logo{font:800 1.05rem/1 'Syne',sans-serif;letter-spacing:-.02em;margin-bottom:1rem}
+    .footer-logo span{color:var(--lime)}
+    .footer-tagline{font-size:.85rem;color:var(--dim);line-height:1.65;max-width:28ch;font-weight:300}
+    .footer-col-title{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:1.5rem}
+    .footer-links{display:flex;flex-direction:column;gap:.7rem}
+    .footer-link{font-size:.88rem;color:rgba(240,235,225,.45);transition:color .2s;font-weight:300}
+    .footer-link:hover{color:var(--text)}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:1rem}
+    .footer-copy{font-size:.75rem;color:var(--dim)}
+    .footer-legal{display:flex;align-items:center;gap:.75rem}
+    .footer-legal-link{font-size:.75rem;color:var(--dim);transition:color .2s}
+    .footer-legal-link:hover{color:var(--text)}
+    .footer-legal-sep{color:var(--dim);opacity:.35;font-size:.75rem}
+  
+    /* ─── Responsive: shared ─── */
+    @media(max-width:960px){
+      .nav-links{display:none}
+    }
+    @media(max-width:600px){
+      footer{padding:3.5rem 1.5rem 2rem}
+      .footer-grid{grid-template-columns:1fr!important;gap:2.5rem}
+      .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    @media(max-width:900px){
+      .about-grid{grid-template-columns:1fr;gap:3rem}
+      .team-grid{grid-template-columns:repeat(2,1fr)}
+      #story .section-inner{flex-direction:column;gap:2rem}
+    }
+    @media(max-width:600px){
+      .section{padding:5rem 1.5rem}
+      .about-hero-h1{font-size:clamp(2.4rem,11vw,4rem)}
+      section.section,#story .section{padding:5rem 1.5rem}
+      .team-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<svg id="blink-top" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 0 H 100 V 100 A 50 28.6 0 0 0 0 100 Z" fill="#1c1c1c"/></svg>
+<svg id="blink-bottom" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 100 H 100 V 0 A 50 28.6 0 0 1 0 0 Z" fill="#1c1c1c"/></svg>
+<div id="blink-logo-wrap" aria-hidden="true"><span id="blink-logo">Ek Blink<span class="bl">.</span></span></div>
+<div id="cursor" aria-hidden="true"></div>
+<!-- Social rail -->
+
+<nav id="navbar" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Ek Blink Solutions" class="nav-logo-img"></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <a href="work.html" class="nav-link">Work</a>
+    <a href="about.html" class="nav-link active">About</a>
+  </div>
+  <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+  </button>
+</nav>
+<div id="nav-drop" aria-hidden="true">
+  <div class="nav-drop-inner">
+    <a href="index.html" class="drop-link">Home</a>
+    <a href="services.html" class="drop-link">Services</a>
+    <a href="work.html" class="drop-link">Work</a>
+    <a href="about.html" class="drop-link">About</a>
+    <a href="blog.html" class="drop-link">Blog</a>
+    <a href="contact.html" class="drop-link">Contact</a>
+  </div>
+</div>
+
+<header id="page-hero">
+  <div class="page-kicker"><span class="page-kicker-text">Who we are</span></div>
+  <h1 class="page-h1">Built on craft.<br><em>Driven by output.</em></h1>
+  <p class="page-sub">Ek Blink Solutions is an immersive marketing agency with studios in the United Kingdom and India. XR, CGI, real-time 3D, and digital marketing under one roof.</p>
+</header>
+
+<section class="section" id="story">
+  <div class="about-grid">
+    <div>
+      <span class="about-tag">About us</span>
+      <h2 class="about-h2">One blink.<br><em>That's the window.</em></h2>
+      <p class="about-body">Ek Blink Solutions is a creative marketing agency specialising in immersive 360-degree videos, AR/VR content, and digital innovation. We blend technology and storytelling to elevate brands through video, design, marketing, web, and mobile solutions.</p>
+      <p class="about-body">In Hindi, <em>ek blink</em> literally means one blink. That's all any brand gets before someone decides whether to keep looking or keep scrolling. The AR that stops people mid-scroll. The 360 campaign that makes a room feel like somewhere else. Every part of it, handled in-house.</p>
+    </div>
+    <div>
+      <div class="mission-block">
+        <div class="mission-label">Our Mission</div>
+        <p class="mission-text">Our mission is to revolutionise brand storytelling through immersive technology, delivering impactful marketing solutions powered by 360-degree video, augmented and virtual reality, and digital innovation that connect, engage, and inspire audiences across the globe.</p>
+      </div>
+      <a href="contact.html" class="about-link">Work with us <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+    </div>
+  </div>
+</section>
+
+
+<section id="team">
+  <div class="team-inner">
+    <h2 class="team-h2">Where we operate</h2>
+    <div class="world-map-wrap">
+      <canvas id="world-map-canvas" aria-label="World map showing Ek Blink Solutions offices in London and Mumbai"></canvas>
+    </div>
+    <div class="map-labels">
+      <div class="map-label" id="map-label-london">
+        <div class="map-label-dot"></div>
+        <div class="map-label-city">London, United Kingdom</div>
+        <div class="map-label-region">EMEA &amp; Americas</div>
+        <p class="map-label-body">Creative direction, client relations, and on-site event delivery. Our UK entity (SN Group of Companies Ltd) handles European and global briefs. Registered in England and Wales.</p>
+      </div>
+      <div class="map-label" id="map-label-mumbai">
+        <div class="map-label-dot"></div>
+        <div class="map-label-city">Mumbai, India</div>
+        <div class="map-label-region">APAC</div>
+        <p class="map-label-body">Production, 3D asset pipelines, CGI, and software development. India studio output is what makes ambitious briefs financially viable without cutting corners on craft.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about-cta">
+  <div class="cta-blob" aria-hidden="true"></div>
+  <div class="cta-inner">
+    <h2 class="cta-h2">Let's make something<br>worth blinking at.</h2>
+    <p class="cta-sub">Drop us a brief. We'll get back within one working day.</p>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn-primary">Start a conversation <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></a>
+      <a href="services.html" class="btn-ghost">View services</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer: gravity social icons -->
+<div id="social-stage" aria-label="Find us on social media">
+  <span class="stage-label" aria-hidden="true">Follow us</span>
+  <a class="social-icon" id="si-ig" href="https://www.instagram.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Instagram" style="--si-color:#E1306C">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-li" href="https://www.linkedin.com/company/ekblinksolutions/" target="_blank" rel="noopener" aria-label="LinkedIn" style="--si-color:#0A66C2">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-yt" href="https://www.youtube.com/@ekblinksolutions4191" target="_blank" rel="noopener" aria-label="YouTube" style="--si-color:#FF0000">
+    <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="var(--bg,#050505)" points="10 15 15.5 12 10 9"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-fb" href="https://www.facebook.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Facebook" style="--si-color:#1877F2">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+  </a>
+</div>
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Ek Blink Solutions<span>.</span></div>
+      <p class="footer-tagline">One blink. Everything changes.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <div class="footer-links">
+        <a href="mailto:ekblinksolutions@gmail.com" class="footer-link">ekblinksolutions@gmail.com</a>
+        <span class="footer-link" style="cursor:default">United Kingdom</span>
+        <span class="footer-link" style="cursor:default">India</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Ek Blink Solutions. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+      <span class="footer-legal-sep">&middot;</span>
+      <a href="terms.html" class="footer-legal-link">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Blink: lids close, show logo, open ───────────────────────────────────
+gsap.set('#blink-top',   {yPercent:-100});
+gsap.set('#blink-bottom',{yPercent:100});
+gsap.set(['.nav-logo','.nav-link','.hamburger'],{opacity:0,y:-16});
+gsap.set(['.page-kicker','.page-h1','.page-sub'],{opacity:0,y:14});
+
+const blink=gsap.timeline({
+  onComplete(){['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()})}
+});
+blink
+  .to('#blink-top',    {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
+  .to('#blink-bottom', {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
+  .to('#blink-logo',   {opacity:1,    duration:.09},                   .22)
+  .to('#blink-logo',   {opacity:0,    duration:.08},                   .55)
+  .to('#blink-top',    {yPercent:-100,duration:.46, ease:'power3.out'},.50)
+  .to('#blink-bottom', {yPercent:100, duration:.46, ease:'power3.out'},.50)
+  .to('.nav-logo',     {opacity:1,y:0,duration:.6,  ease:'power3.out'},.98)
+  .to('.nav-link',     {opacity:1,y:0,duration:.55, stagger:.04,ease:'power3.out'},1.03)
+  .to('.hamburger',    {opacity:1,y:0,duration:.5,  ease:'power3.out'},1.10)
+  .to('.page-kicker',  {opacity:1,y:0,duration:.6,  ease:'power3.out'},1.00)
+  .to('.page-h1',      {opacity:1,y:0,duration:.7,  ease:'power3.out'},1.10)
+  .to('.page-sub',     {opacity:1,y:0,duration:.6,  ease:'power3.out'},1.20);
+
+setTimeout(()=>{
+  ['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()});
+  document.querySelectorAll('.nav-logo,.nav-link,.hamburger,.page-kicker,.page-h1,.page-sub,.about-grid>*,.value-item,.map-label').forEach(el=>{el.style.opacity='1';el.style.transform='none'});
+},2500);
+
+// ── Async Lenis ───────────────────────────────────────────────────────────
+(function(){
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';s.async=true;
+  s.onload=()=>{try{const l=new Lenis({lerp:.08,smoothWheel:true});l.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>l.raf(t*1000));gsap.ticker.lagSmoothing(0);window.__lenis=l;}catch(e){}};
+  document.head.appendChild(s);
+})();
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60)},{passive:true});
+
+// ── CSS cursor ────────────────────────────────────────────────────────────
+(function(){
+  const cur=document.getElementById('cursor');if(!cur)return;
+  document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+  document.addEventListener('mouseover',e=>{cur.classList.toggle('hover',!!(e.target.closest('a,button,[role="button"]')))});
+})();
+
+// ── Hamburger ─────────────────────────────────────────────────────────────
+(function(){
+  const btn=document.getElementById('hamburger-btn'),drop=document.getElementById('nav-drop');
+  let open=false;
+  btn.addEventListener('click',()=>{open=!open;btn.classList.toggle('open',open);drop.classList.toggle('open',open);btn.setAttribute('aria-expanded',open);drop.setAttribute('aria-hidden',!open);if(window.__lenis){open?window.__lenis.stop():window.__lenis.start()}});
+  drop.querySelectorAll('.drop-link').forEach(l=>l.addEventListener('click',()=>{open=false;btn.classList.remove('open');drop.classList.remove('open');btn.setAttribute('aria-expanded',false);drop.setAttribute('aria-hidden',true);if(window.__lenis)window.__lenis.start()}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)btn.click()});
+})();
+
+// ── Scroll reveals ────────────────────────────────────────────────────────
+gsap.from('.about-grid > *',{y:24,opacity:0,stagger:.12,duration:.85,ease:'power3.out',scrollTrigger:{trigger:'#story',start:'top 80%',once:true}});
+gsap.from('.value-item',{y:24,opacity:0,stagger:.08,duration:.75,ease:'power3.out',scrollTrigger:{trigger:'.values-grid',start:'top 80%',once:true}});
+gsap.from('.map-label',{y:24,opacity:0,stagger:.12,duration:.75,ease:'power3.out',scrollTrigger:{trigger:'.map-labels',start:'top 80%',once:true}});
+
+// ── World map (D3 + world-atlas) ─────────────────────────────────────────
+(function(){
+  const canvas=document.getElementById('world-map-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=960,H=480;
+  canvas.width=W;canvas.height=H;
+
+  const LIME='#C3FF00';
+  const SPLIT_LON=57; // east of this = APAC (Mumbai), west = AMER+EMEA (London)
+
+  let proj=null,gPath=null,countries=null,land=null,graticule=null;
+  let apacSet=new Set();
+  let MUMBAI=null,LONDON=null;
+  let hovered=null,pulseT=0;
+
+  function loadScript(src){
+    return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)});
+  }
+
+  async function init(){
+    try{
+      await loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js');
+      await loadScript('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js');
+      const world=await(await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')).json();
+
+      proj=d3.geoNaturalEarth1().scale(153).translate([W/2,H/2]);
+      gPath=d3.geoPath(proj,ctx);
+
+      countries=topojson.feature(world,world.objects.countries).features;
+      land=topojson.merge(world,world.objects.countries.geometries);
+      graticule=d3.geoGraticule()();
+
+      // Classify by centroid longitude
+      countries.forEach(c=>{if(d3.geoCentroid(c)[0]>=SPLIT_LON)apacSet.add(c.id)});
+
+      MUMBAI=proj([72.87,19.07]);
+      LONDON=proj([-0.12,51.51]);
+
+      setupInteraction();
+    }catch(e){console.warn('Map load failed',e)}
+  }
+
+  function drawDot(xy,phase){
+    if(!xy)return;
+    const[x,y]=xy;
+    const p=(Math.sin(pulseT+phase)+1)/2;
+    ctx.beginPath();ctx.arc(x,y,8+p*9,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(195,255,0,${(0.38-p*0.33).toFixed(2)})`;ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fillStyle=LIME;ctx.fill();
+  }
+
+  function render(){
+    requestAnimationFrame(render);
+    ctx.clearRect(0,0,W,H);
+
+    if(gPath&&countries){
+      // Graticule
+      ctx.beginPath();gPath(graticule);
+      ctx.strokeStyle='rgba(195,255,0,0.04)';ctx.lineWidth=0.4;ctx.stroke();
+
+      // Country fills — highlighted region gets lime wash
+      countries.forEach(c=>{
+        const region=apacSet.has(c.id)?'apac':'emea';
+        ctx.beginPath();gPath(c);
+        ctx.fillStyle=(hovered===region)?'rgba(195,255,0,0.18)':'rgba(195,255,0,0.05)';
+        ctx.fill();
+      });
+
+      // Land outline (bold)
+      ctx.beginPath();gPath(land);
+      ctx.strokeStyle='rgba(195,255,0,0.5)';ctx.lineWidth=0.8;ctx.stroke();
+
+      // Country borders (subtle)
+      countries.forEach(c=>{
+        ctx.beginPath();gPath(c);
+        ctx.strokeStyle='rgba(195,255,0,0.1)';ctx.lineWidth=0.3;ctx.stroke();
+      });
+    }
+
+    // City dots (always rendered)
+    drawDot(LONDON,0);
+    drawDot(MUMBAI,Math.PI);
+
+    // Labels
+    if(LONDON&&MUMBAI){
+      ctx.font='600 9px "DM Sans",sans-serif';
+      ctx.fillStyle='rgba(195,255,0,0.82)';ctx.textAlign='left';
+      ctx.fillText('London',LONDON[0]+9,LONDON[1]-1);
+      ctx.fillText('Mumbai',MUMBAI[0]+9,MUMBAI[1]-1);
+    }
+
+    pulseT+=0.035;
+  }
+
+  function setupInteraction(){
+    canvas.addEventListener('mousemove',e=>{
+      const r=canvas.getBoundingClientRect();
+      const cx=(e.clientX-r.left)*(W/r.width);
+      const cy=(e.clientY-r.top)*(H/r.height);
+      const dm=MUMBAI?Math.hypot(cx-MUMBAI[0],cy-MUMBAI[1]):999;
+      const dl=LONDON?Math.hypot(cx-LONDON[0],cy-LONDON[1]):999;
+      hovered=dm<22?'apac':dl<22?'emea':null;
+      canvas.style.cursor=hovered?'pointer':'default';
+      document.getElementById('map-label-london').classList.toggle('active',hovered==='emea');
+      document.getElementById('map-label-mumbai').classList.toggle('active',hovered==='apac');
+    });
+    canvas.addEventListener('mouseleave',()=>{
+      hovered=null;canvas.style.cursor='default';
+      document.querySelectorAll('.map-label').forEach(el=>el.classList.remove('active'));
+    });
+  }
+
+  render();
+  init();
+})();
+
+</script>
+<script>
+// Social rail fall-in
+
+
+// ── Footer social stage - gravity physics ────────────────────────────────
+(function(){
+  const stage=document.getElementById('social-stage');
+  if(!stage)return;
+  const iconEls=[
+    document.getElementById('si-ig'),
+    document.getElementById('si-li'),
+    document.getElementById('si-yt'),
+    document.getElementById('si-fb'),
+  ];
+  const RADIUS=27,D=RADIUS*2,GRAVITY=750,RESTITUTION=0.60,FLOOR_FRIC=0.85,WALL_FRIC=0.75,MIN_V=1.5,MAX_BOUNCES=22;
+  const START_X_PCT=[0.15,0.38,0.62,0.85];
+  function getW(){return stage.offsetWidth||window.innerWidth}
+  function getH(){return stage.offsetHeight||200}
+  function getGround(){return getH()-RADIUS-1}
+  const bodies=iconEls.map((el,i)=>({el,x:0,y:-RADIUS,vx:(Math.random()-.5)*80,vy:0,settled:false,bounces:0,release:250+i*170,started:false}));
+  function initPositions(){const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i];b.el.style.left=(b.x-RADIUS)+'px';b.el.style.top=(-D)+'px'})}
+  requestAnimationFrame(()=>requestAnimationFrame(initPositions));
+  window.addEventListener('resize',()=>{const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i]});initPositions()},{passive:true});
+  let triggerTime=null;
+  const observer=new IntersectionObserver((entries)=>{
+    if(entries[0].isIntersecting&&triggerTime===null){
+      triggerTime=performance.now();iconEls.forEach(el=>el.style.opacity='1');observer.disconnect();
+    }
+  },{threshold:0.25});
+  observer.observe(stage);
+  let lastT=null;
+  function raf(now){
+    requestAnimationFrame(raf);
+    if(triggerTime===null){lastT=null;return}
+    if(lastT===null){lastT=now;return}
+    const dt=Math.min((now-lastT)/1000,.033);lastT=now;
+    const elapsed=now-triggerTime,W=getW(),GROUND=getGround();
+    bodies.forEach(b=>{
+      if(b.settled)return;
+      if(!b.started){if(elapsed>=b.release){b.started=true;b.y=-RADIUS}else return}
+      b.vy+=GRAVITY*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;
+      if(b.y>=GROUND){b.y=GROUND;b.vy=-b.vy*RESTITUTION;b.vx*=FLOOR_FRIC;b.bounces++;if(Math.abs(b.vy)<MIN_V)b.vy=0;if(b.bounces>MAX_BOUNCES)b.vy=0}
+      if(b.x-RADIUS<0){b.x=RADIUS;b.vx=Math.abs(b.vx)*WALL_FRIC}
+      if(b.x+RADIUS>W){b.x=W-RADIUS;b.vx=-Math.abs(b.vx)*WALL_FRIC}
+      if(b.y>=GROUND-1&&Math.abs(b.vy)<.5&&Math.abs(b.vx)<.5){b.settled=true;b.y=GROUND;b.vx=0;b.vy=0}
+      bodies.forEach(other=>{
+        if(other===b||!other.started)return;
+        const dx=b.x-other.x,dy=b.y-other.y,dist=Math.hypot(dx,dy);
+        if(dist<D&&dist>0){
+          const overlap=(D-dist)/2,nx=dx/dist,ny=dy/dist;
+          b.x+=nx*overlap;b.y+=ny*overlap;other.x-=nx*overlap;other.y-=ny*overlap;
+          const dvx=b.vx-other.vx,dvy=b.vy-other.vy,dot=dvx*nx+dvy*ny;
+          if(dot<0){b.vx-=dot*nx*.6;b.vy-=dot*ny*.6;other.vx+=dot*nx*.6;other.vy+=dot*ny*.6}
+        }
+      });
+      b.el.style.left=(b.x-RADIUS)+'px';b.el.style.top=(b.y-RADIUS)+'px';
+    });
+  }
+  requestAnimationFrame(raf);
+})();
+</script>
+</body>
+</html>
