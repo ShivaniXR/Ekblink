@@ -328,7 +328,7 @@
       text-transform: uppercase;
       color: var(--acc);
       padding: .3rem .7rem;
-      border: 1px solid;
+      border: 1px solid rgba(195,255,0,.3);
       border-color: color-mix(in srgb, var(--acc) 30%, transparent);
       border-radius: 2px;
       flex-shrink: 0;
@@ -392,7 +392,8 @@
       letter-spacing: .1em;
       text-transform: uppercase;
       color: var(--acc);
-      border: 1px solid color-mix(in srgb, var(--acc) 28%, transparent);
+      border: 1px solid rgba(195,255,0,.28);
+      border-color: color-mix(in srgb, var(--acc) 28%, transparent);
       padding: .65rem 1.4rem;
       border-radius: 2px;
       transition: background .18s, color .18s, gap .2s var(--ease), border-color .18s;
@@ -484,6 +485,10 @@
     .footer-link:hover { color: var(--text) }
     .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border) }
     .footer-copy { font-size: .75rem; color: var(--dim) }
+    .footer-legal { display: flex; align-items: center; gap: .5rem }
+    .footer-legal-link { font-size: .75rem; color: var(--dim); transition: color .2s }
+    .footer-legal-link:hover { color: var(--text) }
+    .footer-legal-sep { font-size: .75rem; color: var(--dim) }
     .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem }
     .fs-link { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #383838; border: 1px solid var(--border); border-radius: 50%; transition: color .3s var(--ease), border-color .3s var(--ease), transform .2s var(--ease) }
     .fs-link:hover { transform: scale(1.12) }
@@ -790,7 +795,7 @@
       <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
     </a>
     <a class="social-icon" id="si-yt" href="https://www.youtube.com/@ekblinksolutions4191" target="_blank" rel="noopener" aria-label="YouTube" style="--si-color:#FF0000">
-      <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="var(--bg,#050505)" points="10 15 15.5 12 10 9"/></svg></div>
+      <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="#050505" points="10 15 15.5 12 10 9"/></svg></div>
     </a>
     <a class="social-icon" id="si-fb" href="https://www.facebook.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Facebook" style="--si-color:#1877F2">
       <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
@@ -824,10 +829,12 @@
 
   <script>
   gsap.registerPlugin(ScrollTrigger);
+  window.isMobile = window.innerWidth <= 980;
 
   // ── 1. Blink ──────────────────────────────────────────────────────────────
-  gsap.set('#blink-top',    { yPercent: -100 });
-  gsap.set('#blink-bottom', { yPercent: 100 });
+  const _lidH=window.innerHeight*.7;
+  gsap.set('#blink-top',    { y: -_lidH });
+  gsap.set('#blink-bottom', { y:  _lidH });
   gsap.set(['.nav-logo', '.nav-link', '.hamburger'], { opacity: 0, y: -14 });
   gsap.set(['.hero-h1', '.hero-sub'], { opacity: 0, y: 12 });
   const blinkTl = gsap.timeline({
@@ -838,12 +845,12 @@
     }
   });
   blinkTl
-    .to('#blink-top',    { yPercent: 0,    duration: .28, ease: 'power4.in' }, 0)
-    .to('#blink-bottom', { yPercent: 0,    duration: .28, ease: 'power4.in' }, 0)
-    .to('#blink-logo',   { opacity: 1,     duration: .09 }, .22)
-    .to('#blink-logo',   { opacity: 0,     duration: .08 }, .55)
-    .to('#blink-top',    { yPercent: -100, duration: .46, ease: 'power3.out' }, .50)
-    .to('#blink-bottom', { yPercent: 100,  duration: .46, ease: 'power3.out' }, .50)
+    .to('#blink-top',    { y: 0,      duration: .28, ease: 'power4.in' }, 0)
+    .to('#blink-bottom', { y: 0,      duration: .28, ease: 'power4.in' }, 0)
+    .to('#blink-logo',   { opacity: 1, duration: .09 }, .22)
+    .to('#blink-logo',   { opacity: 0, duration: .08 }, .55)
+    .to('#blink-top',    { y: -_lidH, duration: .46, ease: 'power3.out' }, .50)
+    .to('#blink-bottom', { y:  _lidH, duration: .46, ease: 'power3.out' }, .50)
     .to('.nav-logo',     { opacity: 1, y: 0, duration: .6,  ease: 'power3.out' }, .98)
     .to('.nav-link',     { opacity: 1, y: 0, duration: .55, stagger: .04, ease: 'power3.out' }, 1.03)
     .to('.hamburger',    { opacity: 1, y: 0, duration: .5,  ease: 'power3.out' }, 1.10)
@@ -1062,23 +1069,26 @@
     contentEl.innerHTML = buildContent(SERVICES[0]);
     contentEl.style.opacity = '1';
 
-    // Rail reveal: film-strip wipe on page load
-    gsap.set(items, { clipPath: 'inset(0 100% 0 0)' });
-    gsap.to(items, {
-      clipPath: 'inset(0 0% 0 0)',
-      duration: .55,
-      stagger: .045,
-      delay: 1.3,
-      ease: 'power3.out',
-      onComplete: triggerDividerDraw
-    });
-
-    // Content first reveal
-    gsap.from(contentEl, { opacity: 0, y: 14, duration: .65, delay: 1.5, ease: 'power3.out' });
+    if(!window.isMobile) {
+      // Rail reveal: fade in on page load (clip-path avoided — unreliable on Safari)
+      gsap.set(items, { opacity: 0 });
+      gsap.to(items, {
+        opacity: 1,
+        duration: .55,
+        stagger: .045,
+        delay: 1.3,
+        ease: 'power3.out',
+        onComplete: triggerDividerDraw
+      });
+      // Content first reveal
+      gsap.from(contentEl, { opacity: 0, y: 14, duration: .65, delay: 1.5, ease: 'power3.out' });
+    } else {
+      triggerDividerDraw();
+    }
   })();
 
   // ── 7. Hero dot-grid canvas ───────────────────────────────────────────────
-  (function () {
+  !window.isMobile && (function () {
     const heroEl = document.getElementById('svc-hero');
     const hc = document.getElementById('svc-hero-canvas');
     if (!heroEl || !hc) return;
@@ -1096,8 +1106,8 @@
     new ResizeObserver(init).observe(heroEl);
     heroEl.addEventListener('mousemove', e => { const r = heroEl.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; }, { passive: true });
     heroEl.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
-    (function raf() {
-      requestAnimationFrame(raf);
+    let rafId = null;
+    function raf() {
       ctx.clearRect(0, 0, W, H);
       dots.forEach(d => {
         const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy);
@@ -1109,7 +1119,14 @@
         ctx.fillStyle = off > 4 ? '#C3FF00' : '#2A2A2A';
         ctx.beginPath(); ctx.arc(d.x, d.y, off > 3 ? 1.8 : 1.1, 0, Math.PI * 2); ctx.fill(); ctx.restore();
       });
-    })();
+      rafId = requestAnimationFrame(raf);
+    }
+    // Only run the loop while the hero is on screen
+    new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) { if (!rafId) rafId = requestAnimationFrame(raf); }
+      else { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
+    }, { threshold: 0 }).observe(heroEl);
+    rafId = requestAnimationFrame(raf);
   })();
 
   // ── 8. How We Work timeline ───────────────────────────────────────────────
@@ -1129,16 +1146,18 @@
         steps.forEach((s, i) => s.classList.toggle('active', self.progress >= (i + .5) / steps.length));
       }
     });
-    gsap.set('.hww-step', { opacity: 0, y: 16 });
-    ScrollTrigger.create({
-      trigger: tl, start: 'top 82%', once: true,
-      onEnter: () => gsap.to('.hww-step', { opacity: 1, y: 0, duration: .6, stagger: .13, ease: 'power3.out' })
-    });
-    gsap.set(['.hww-label', '.hww-h2'], { opacity: 0, y: 12 });
-    ScrollTrigger.create({
-      trigger: '#how-we-work', start: 'top 82%', once: true,
-      onEnter: () => gsap.to(['.hww-label', '.hww-h2'], { opacity: 1, y: 0, duration: .6, stagger: .1, ease: 'power3.out' })
-    });
+    if(!window.isMobile) {
+      gsap.set('.hww-step', { opacity: 0, y: 16 });
+      ScrollTrigger.create({
+        trigger: tl, start: 'top 82%', once: true,
+        onEnter: () => gsap.to('.hww-step', { opacity: 1, y: 0, duration: .6, stagger: .13, ease: 'power3.out' })
+      });
+      gsap.set(['.hww-label', '.hww-h2'], { opacity: 0, y: 12 });
+      ScrollTrigger.create({
+        trigger: '#how-we-work', start: 'top 82%', once: true,
+        onEnter: () => gsap.to(['.hww-label', '.hww-h2'], { opacity: 1, y: 0, duration: .6, stagger: .1, ease: 'power3.out' })
+      });
+    }
     // Safety
     setTimeout(() => {
       document.querySelectorAll('.hww-label,.hww-h2,.hww-step').forEach(el => { el.style.opacity = ''; el.style.transform = ''; });

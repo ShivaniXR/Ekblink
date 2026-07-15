@@ -297,6 +297,10 @@
       #social-stage{height:150px}
     }
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    @media(max-width:600px){
+      .cta-h2{font-size:clamp(1.5rem,6.5vw,2.2rem)!important;word-break:break-word;overflow-wrap:break-word}
+      .cta-inner{padding:4rem 1.5rem!important}
+    }
   </style>
 </head>
 <body>
@@ -596,8 +600,9 @@
 
     // Blink
     if(typeof gsap !== 'undefined'){
-      gsap.set('#blink-top',    {yPercent:-100});
-      gsap.set('#blink-bottom', {yPercent:100});
+      const _lidH=window.innerHeight*.7;
+      gsap.set('#blink-top',    {y:-_lidH});
+      gsap.set('#blink-bottom', {y: _lidH});
       gsap.set(['.nav-logo','.nav-link','.hamburger'], {opacity:0, y:-14});
 
       const blink = gsap.timeline({
@@ -608,12 +613,12 @@
         }
       });
       blink
-        .to('#blink-top',    {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
-        .to('#blink-bottom', {yPercent:0,   duration:.28, ease:'power4.in'}, 0)
-        .to('#blink-logo',   {opacity:1,    duration:.09}, .22)
-        .to('#blink-logo',   {opacity:0,    duration:.08}, .55)
-        .to('#blink-top',    {yPercent:-100,duration:.46, ease:'power3.out'}, .50)
-        .to('#blink-bottom', {yPercent:100, duration:.46, ease:'power3.out'}, .50)
+        .to('#blink-top',    {y:0,      duration:.28, ease:'power4.in'}, 0)
+        .to('#blink-bottom', {y:0,      duration:.28, ease:'power4.in'}, 0)
+        .to('#blink-logo',   {opacity:1,duration:.09}, .22)
+        .to('#blink-logo',   {opacity:0,duration:.08}, .55)
+        .to('#blink-top',    {y:-_lidH, duration:.46, ease:'power3.out'}, .50)
+        .to('#blink-bottom', {y: _lidH, duration:.46, ease:'power3.out'}, .50)
         .to('.nav-logo',     {opacity:1,y:0,duration:.6,  ease:'power3.out'}, .98)
         .to('.nav-link',     {opacity:1,y:0,duration:.55, stagger:.04, ease:'power3.out'}, 1.03)
         .to('.hamburger',    {opacity:1,y:0,duration:.5,  ease:'power3.out'}, 1.10);
