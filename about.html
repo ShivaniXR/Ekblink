@@ -120,7 +120,7 @@
     .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
     .footer-copy{font-size:.75rem;color:var(--dim)}
     .footer-link{font-size:.75rem;color:var(--dim);transition:color .2s}
-    .footer-link:hover{color:var(--text)}}
+    .footer-link:hover{color:var(--text)}
   
     /* ── Social rail (sidebar) ── */
     /* ── Footer socials ── */
@@ -193,7 +193,7 @@
     @keyframes sk-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     @media(max-width:600px){
-      #page-hero{padding:calc(var(--nav-h)+2.5rem) 1.5rem 3rem}
+      #page-hero{padding:calc(var(--nav-h)+4.5rem) 1.5rem 3rem}
       .page-h1{font-size:clamp(2.2rem,10vw,3.5rem)}
       .about-cta-h2{font-size:clamp(1.8rem,8vw,2.8rem)}
       .cta-h2{font-size:clamp(1.5rem,6.5vw,2.2rem)!important;word-break:break-word;overflow-wrap:break-word}
@@ -548,14 +548,16 @@ gsap.from('.map-label',{y:24,opacity:0,stagger:.12,duration:.75,ease:'power3.out
   function getGround(){return getH()-RADIUS-1}
   const bodies=iconEls.map((el,i)=>({el,x:0,y:-RADIUS,vx:(Math.random()-.5)*80,vy:0,settled:false,bounces:0,release:250+i*170,started:false}));
   function initPositions(){const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i];b.el.style.left=(b.x-RADIUS)+'px';b.el.style.top=(-D)+'px'})}
-  requestAnimationFrame(()=>requestAnimationFrame(initPositions));
+  initPositions();window.addEventListener("load",initPositions,{once:true});
   window.addEventListener('resize',()=>{const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i]});initPositions()},{passive:true});
   let triggerTime=null;
   const observer=new IntersectionObserver((entries)=>{
     if(entries[0].isIntersecting&&triggerTime===null){
-      triggerTime=performance.now();iconEls.forEach(el=>el.style.opacity='1');observer.disconnect();
+      triggerTime=performance.now();
+      iconEls.forEach(el=>el.style.opacity='1');
+      observer.disconnect();
     }
-  },{threshold:0.25});
+  },{threshold:0});
   observer.observe(stage);
   let lastT=null;
   function raf(now){

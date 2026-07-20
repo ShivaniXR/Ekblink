@@ -68,8 +68,7 @@
     #contact-wrap{display:grid;grid-template-columns:42% 58%;min-height:100svh;padding-top:var(--nav-h)}
     #contact-left{background:var(--surface);border-right:1px solid var(--border);padding:5rem 2.5rem 3rem;position:sticky;top:var(--nav-h);height:calc(100svh - var(--nav-h));display:flex;flex-direction:column}
     #contact-left-top{flex:1}
-    .contact-label{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:2rem;display:flex;align-items:center;gap:.6rem}
-    .contact-label::before{content:'';display:block;width:20px;height:1px;background:var(--lime)}
+    .contact-label{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:2rem}
     .contact-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,3.5vw,3.2rem);letter-spacing:-.03em;line-height:1;margin-bottom:2rem}
     .contact-h2 em{font-style:italic;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--lime)}
     .contact-meta{display:flex;flex-direction:column;gap:1.5rem;margin-bottom:2.5rem}
@@ -469,7 +468,7 @@ document.getElementById('contact-form').addEventListener('submit',e=>{
       b.el.style.top=(-D)+'px';
     });
   }
-  requestAnimationFrame(()=>requestAnimationFrame(initPositions));
+  initPositions();window.addEventListener("load",initPositions,{once:true});
   window.addEventListener('resize',()=>{
     const W=getW();
     bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i];});

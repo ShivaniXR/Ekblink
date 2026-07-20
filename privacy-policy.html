@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Ek Blink Solutions</title>
+  <meta name="description" content="Privacy Policy for Ek Blink Solutions - how we collect, use and protect your personal data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px}
+    body{background:#050505;color:#F0EBE1;font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    :root{
+      --bg:#050505;--surface:#0D0D0D;--border:#1E1E1E;--text:#F0EBE1;--dim:#555;
+      --lime:#C3FF00;--nav-h:72px;--ease:cubic-bezier(0.22,1,0.36,1);
+    }
+    *{cursor:none}
+    #cursor{position:fixed;top:0;left:0;width:12px;height:12px;background:var(--lime);border-radius:50%;border:1.5px solid transparent;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),background .2s,border-color .2s;will-change:left,top}
+    #cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
+    @media(hover:none){#cursor{display:none}*{cursor:auto}}
+    .blink-lid{position:fixed;left:0;width:100%;height:70vh;z-index:99990;pointer-events:none;display:block}
+    #blink-top{top:0}
+    #blink-bottom{bottom:0}
+    #blink-logo-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99991;pointer-events:none}
+    #blink-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1rem,2vw,1.45rem);letter-spacing:-.02em;color:#F0EBE1;opacity:0;user-select:none;white-space:nowrap}
+    #blink-logo .bl{color:#C3FF00}
+    #navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;transition:background .4s,border-color .4s}
+    #navbar.scrolled{background:rgba(5,5,5,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+    .nav-logo-img{height:34px;width:auto;display:block}
+    .nav-links{display:flex;align-items:center;gap:2.5rem}
+    .nav-link{font-size:.85rem;color:var(--dim);transition:color .25s;position:relative}
+    .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--lime);transition:width .3s var(--ease)}
+    .nav-link:hover{color:var(--text)}
+    .nav-link:hover::after,.nav-link.active::after{width:100%}
+    .nav-link.active{color:var(--lime)}
+    .hamburger{width:46px;height:46px;border:1px solid var(--border);border-radius:50%;background:transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;position:relative;overflow:hidden}
+    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0;right:0;background:var(--lime);z-index:0;transition:transform .3s var(--ease)}
+    .hamburger::before{top:0;height:51%;transform:scaleY(0);transform-origin:top}
+    .hamburger::after{bottom:0;height:51%;transform:scaleY(0);transform-origin:bottom}
+    .hamburger:hover::before,.hamburger:hover::after{transform:scaleY(1)}
+    .ham-line{width:18px;height:1.5px;background:var(--text);border-radius:1px;display:block;position:relative;z-index:1;transition:transform .35s var(--ease),opacity .25s,background .3s}
+    .hamburger:hover .ham-line{background:#050505}
+    .hamburger.open .ham-line:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+    .hamburger.open .ham-line:nth-child(2){opacity:0;transform:scaleX(0)}
+    .hamburger.open .ham-line:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+    #nav-drop{position:fixed;top:calc(var(--nav-h) + .5rem);right:2rem;left:auto;width:230px;background:rgba(8,8,8,.98);border:1px solid var(--border);border-radius:10px;backdrop-filter:blur(24px);z-index:800;clip-path:inset(0 0 100% 0 round 10px);transition:clip-path .4s var(--ease)}
+    #nav-drop.open{clip-path:inset(0 0 0% 0 round 10px)}
+    .nav-drop-inner{padding:.4rem 0;display:flex;flex-direction:column}
+    .drop-link{font:600 .88rem/1 'Syne',sans-serif;letter-spacing:-.01em;color:rgba(240,235,225,.55);padding:.75rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.06);transition:color .18s,background .18s,padding-left .22s var(--ease)}
+    .drop-link:first-child{border-top:none}
+    .drop-link:last-child{border-bottom:none}
+    .drop-link:hover{color:var(--lime);background:rgba(195,255,0,.07);padding-left:1.65rem}
+    @media(max-width:960px){
+      #nav-drop{right:0;left:0;width:auto;border-radius:0;border-left:none;border-right:none;border-top:none;top:var(--nav-h)}
+      .drop-link{font-size:clamp(1.2rem,4.5vw,1.8rem);padding:.75rem 1.5rem}
+      .nav-links{display:none}
+    }
+
+    /* Page content */
+    .legal-wrap{max-width:780px;margin:0 auto;padding:calc(var(--nav-h) + 5rem) 2rem 6rem}
+    .legal-kicker{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:2rem}
+    .legal-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:-.03em;line-height:.95;margin-bottom:.75rem}
+    .legal-updated{font-size:.78rem;color:var(--dim);margin-bottom:4rem;font-weight:300}
+    .legal-section{margin-bottom:3rem;padding-top:3rem;border-top:1px solid var(--border)}
+    .legal-section:first-of-type{border-top:none;padding-top:0}
+    .legal-h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-.02em;margin-bottom:1rem;color:var(--text)}
+    .legal-p{font-size:.95rem;color:rgba(240,235,225,.65);line-height:1.85;font-weight:300;margin-bottom:.9rem}
+    .legal-p a{color:var(--lime);text-decoration:underline;text-underline-offset:3px}
+    .legal-p a:hover{opacity:.8}
+    .legal-list{font-size:.95rem;color:rgba(240,235,225,.65);line-height:1.85;font-weight:300;padding-left:1.4rem;margin-bottom:.9rem}
+    .legal-list li{margin-bottom:.4rem}
+
+    /* Footer */
+    footer{border-top:1px solid var(--border);padding:5rem 2rem 3rem;max-width:1200px;margin:0 auto}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:4rem;margin-bottom:4rem}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em;margin-bottom:1rem}
+    .footer-logo span{color:var(--lime)}
+    .footer-tagline{font-size:.85rem;color:var(--dim);line-height:1.65;max-width:28ch;font-weight:300}
+    .footer-col-title{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:1.5rem}
+    .footer-links{display:flex;flex-direction:column;gap:.7rem}
+    .footer-link{font-size:.88rem;color:rgba(240,235,225,.55);transition:color .2s;font-weight:300}
+    .footer-link:hover{color:var(--text)}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:1rem}
+    .footer-copy{font-size:.75rem;color:var(--dim)}
+    .footer-legal{display:flex;gap:1.5rem}
+    .footer-legal-link{font-size:.75rem;color:var(--dim);transition:color .2s}
+    .footer-legal-link:hover{color:var(--text)}
+    @media(max-width:600px){
+      .legal-wrap{padding:calc(var(--nav-h)+3.5rem) 1.5rem 4rem}
+      footer{padding:3.5rem 1.5rem 2rem}
+      .footer-grid{grid-template-columns:1fr;gap:2.5rem}
+      .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
+    }
+    /* ── Footer social stage (physics) ── */
+    #social-stage{position:relative;height:200px;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);transform:translateZ(0)}
+    .social-icon{position:absolute;left:0;top:0;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#666;will-change:transform;z-index:10;opacity:1;transition:background .25s,border-color .25s,color .25s}
+    .social-icon:hover{background:rgba(255,255,255,.08);border-color:var(--si-color,var(--lime));color:var(--si-color,var(--lime))}
+    .social-icon:hover .si-inner{transform:scale(1.1)}
+    .si-inner{transition:transform .15s var(--ease);pointer-events:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+    .social-icon svg{width:22px;height:22px;pointer-events:none}
+    .stage-label{position:absolute;top:.75rem;left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,235,225,.12);font-weight:500;white-space:nowrap;pointer-events:none;user-select:none}
+  </style>
+</head>
+<body>
+
+<svg id="blink-top" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 0 H 100 V 100 A 50 28.6 0 0 0 0 100 Z" fill="#1c1c1c"/></svg>
+<svg id="blink-bottom" class="blink-lid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M 0 100 H 100 V 0 A 50 28.6 0 0 1 0 0 Z" fill="#1c1c1c"/></svg>
+<div id="blink-logo-wrap" aria-hidden="true"><span id="blink-logo">Ek Blink<span class="bl">.</span></span></div>
+<div id="cursor" aria-hidden="true"></div>
+
+<nav id="navbar" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Ek Blink Solutions" class="nav-logo-img"></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+  </button>
+</nav>
+
+<div id="nav-drop" aria-hidden="true">
+  <div class="nav-drop-inner">
+    <a href="index.html" class="drop-link">Home</a>
+    <a href="services.html" class="drop-link">Services</a>
+    <a href="work.html" class="drop-link">Work</a>
+    <a href="about.html" class="drop-link">About</a>
+    <a href="blog.html" class="drop-link">Blog</a>
+    <a href="contact.html" class="drop-link">Contact</a>
+  </div>
+</div>
+
+<main>
+  <div class="legal-wrap">
+    <div class="legal-kicker">Legal</div>
+    <h1 class="legal-h1">Privacy Policy</h1>
+    <p class="legal-updated">Last updated: July 2025</p>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">Who we are</h2>
+      <p class="legal-p">Ek Blink Solutions is a creative marketing and immersive technology agency with studios in the United Kingdom and India. Our UK entity is SN Group of Companies Ltd, registered in England and Wales. References to "Ek Blink Solutions", "we", "us", or "our" in this policy refer to SN Group of Companies Ltd and its associated operations.</p>
+      <p class="legal-p">If you have any questions about this policy, contact us at <a href="mailto:info@ekblinksolutions.com">info@ekblinksolutions.com</a>.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">What data we collect</h2>
+      <p class="legal-p">We collect personal data only when you actively provide it to us - for example, when you fill in our contact form, send us an email, or enquire about our services. The data we may collect includes:</p>
+      <ul class="legal-list">
+        <li>Your name and job title</li>
+        <li>Your email address and phone number</li>
+        <li>Your company name and website</li>
+        <li>Details of your project or enquiry</li>
+        <li>Technical data collected automatically (IP address, browser type, pages visited) via analytics tools</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">How we use your data</h2>
+      <p class="legal-p">We use the data you provide to respond to your enquiries, deliver services we have agreed to provide, and communicate with you about ongoing projects. We do not sell your personal data to third parties. We may use your contact details to send you occasional updates about our work or services, but you can opt out at any time.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">Legal basis for processing</h2>
+      <p class="legal-p">We process your personal data on the basis of legitimate interests (responding to enquiries and delivering services) and, where applicable, contractual necessity. Where we send marketing communications, we rely on your consent, which you may withdraw at any time.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">Data retention</h2>
+      <p class="legal-p">We retain personal data only for as long as necessary for the purpose it was collected. Enquiry data is typically retained for up to three years. Client project data is retained for up to seven years in line with our accounting and legal obligations.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">Cookies and analytics</h2>
+      <p class="legal-p">Our website may use cookies and third-party analytics tools (such as Google Analytics) to understand how visitors use the site. These tools collect anonymised data about page visits and user behaviour. You can control cookie preferences through your browser settings.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">Your rights</h2>
+      <p class="legal-p">Under UK GDPR and applicable data protection law, you have the right to access, correct, or delete personal data we hold about you. You also have the right to object to processing or request that we restrict it. To exercise any of these rights, contact us at <a href="mailto:info@ekblinksolutions.com">info@ekblinksolutions.com</a>.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="legal-h2">Changes to this policy</h2>
+      <p class="legal-p">We may update this Privacy Policy from time to time. The date at the top of this page shows when it was last revised. Continued use of our website after any changes constitutes acceptance of the updated policy.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Footer: gravity social icons -->
+<div id="social-stage" aria-label="Find us on social media">
+  <span class="stage-label" aria-hidden="true">Follow us</span>
+  <a class="social-icon" id="si-ig" href="https://www.instagram.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Instagram" style="--si-color:#E1306C">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-li" href="https://www.linkedin.com/company/ekblinksolutions/" target="_blank" rel="noopener" aria-label="LinkedIn" style="--si-color:#0A66C2">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-yt" href="https://www.youtube.com/@ekblinksolutions4191" target="_blank" rel="noopener" aria-label="YouTube" style="--si-color:#FF0000">
+    <div class="si-inner"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8z"/><polygon fill="var(--bg,#050505)" points="10 15 15.5 12 10 9"/></svg></div>
+  </a>
+  <a class="social-icon" id="si-fb" href="https://www.facebook.com/ekblinksolutions" target="_blank" rel="noopener" aria-label="Facebook" style="--si-color:#1877F2">
+    <div class="si-inner"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Ek Blink Solutions<span>.</span></div>
+      <p class="footer-tagline">One blink. Everything changes.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <div class="footer-links">
+        <a href="mailto:info@ekblinksolutions.com" class="footer-link">info@ekblinksolutions.com</a>
+        <a href="contact.html" class="footer-link">Contact page</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">&copy; 2025 SN Group of Companies Ltd t/a Ek Blink Solutions. All rights reserved.</p>
+    <div class="footer-legal">
+      <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+      <a href="terms.html" class="footer-legal-link">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('hover'));
+});
+
+// Navbar scroll
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>20)},{passive:true});
+
+// Hamburger
+const ham=document.getElementById('hamburger');
+const drop=document.getElementById('nav-drop');
+ham.addEventListener('click',()=>{
+  const open=ham.classList.toggle('open');
+  drop.classList.toggle('open',open);
+  ham.setAttribute('aria-expanded',open);
+  drop.setAttribute('aria-hidden',!open);
+});
+document.addEventListener('click',e=>{
+  if(!ham.contains(e.target)&&!drop.contains(e.target)){
+    ham.classList.remove('open');drop.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');drop.setAttribute('aria-hidden','true');
+  }
+});
+
+// Blink lid animation
+(function(){
+  const _lidH=window.innerHeight*.7;
+  gsap.set('#blink-top',   {y:-_lidH});
+  gsap.set('#blink-bottom',{y: _lidH});
+  const blink=gsap.timeline({
+    onComplete(){['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()})}
+  });
+  blink
+    .to('#blink-top',    {y:0,      duration:.28, ease:'power4.in'}, 0)
+    .to('#blink-bottom', {y:0,      duration:.28, ease:'power4.in'}, 0)
+    .to('#blink-logo',   {opacity:1,duration:.09},                    .22)
+    .to('#blink-logo',   {opacity:0,duration:.08},                    .55)
+    .to('#blink-top',    {y:-_lidH, duration:.46, ease:'power3.out'},.50)
+    .to('#blink-bottom', {y: _lidH, duration:.46, ease:'power3.out'},.50);
+  setTimeout(()=>{['blink-top','blink-bottom','blink-logo-wrap'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove()})},2500);
+})();
+
+// ── Footer social stage - gravity physics ────────────────────────────────
+(function(){
+  const stage=document.getElementById('social-stage');
+  if(!stage)return;
+  const iconEls=[
+    document.getElementById('si-ig'),
+    document.getElementById('si-li'),
+    document.getElementById('si-yt'),
+    document.getElementById('si-fb'),
+  ];
+  const RADIUS=27,D=RADIUS*2,GRAVITY=750,RESTITUTION=0.60,FLOOR_FRIC=0.85,WALL_FRIC=0.75,MIN_V=1.5,MAX_BOUNCES=22;
+  const START_X_PCT=[0.15,0.38,0.62,0.85];
+  function getW(){return stage.offsetWidth||window.innerWidth}
+  function getH(){return stage.offsetHeight||200}
+  function getGround(){return getH()-RADIUS-1}
+  const bodies=iconEls.map((el,i)=>({el,x:0,y:-RADIUS,vx:(Math.random()-.5)*80,vy:0,settled:false,bounces:0,release:250+i*170,started:false}));
+  function initPositions(){const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i];b.el.style.transform='translate('+(b.x-RADIUS)+'px,'+(-D)+'px)'})}
+  initPositions();window.addEventListener('load',initPositions,{once:true});
+  window.addEventListener('resize',()=>{const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i]});initPositions()},{passive:true});
+  let triggerTime=null;
+  const observer=new IntersectionObserver((entries)=>{
+    if(entries[0].isIntersecting&&triggerTime===null){
+      triggerTime=performance.now();observer.disconnect();
+    }
+  },{threshold:0});
+  observer.observe(stage);
+  let lastT=null;
+  function raf(now){
+    requestAnimationFrame(raf);
+    if(triggerTime===null){lastT=null;return}
+    if(lastT===null){lastT=now;return}
+    const dt=Math.min((now-lastT)/1000,.033);lastT=now;
+    const elapsed=now-triggerTime,W=getW(),GROUND=getGround();
+    bodies.forEach(b=>{
+      if(b.settled)return;
+      if(!b.started){if(elapsed>=b.release){b.started=true;b.y=-RADIUS}else return}
+      b.vy+=GRAVITY*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;
+      if(b.y>=GROUND){b.y=GROUND;b.vy=-b.vy*RESTITUTION;b.vx*=FLOOR_FRIC;b.bounces++;if(Math.abs(b.vy)<MIN_V)b.vy=0;if(b.bounces>MAX_BOUNCES)b.vy=0}
+      if(b.x-RADIUS<0){b.x=RADIUS;b.vx=Math.abs(b.vx)*WALL_FRIC}
+      if(b.x+RADIUS>W){b.x=W-RADIUS;b.vx=-Math.abs(b.vx)*WALL_FRIC}
+      if(b.y>=GROUND-1&&Math.abs(b.vy)<.5&&Math.abs(b.vx)<.5){b.settled=true;b.y=GROUND;b.vx=0;b.vy=0}
+      bodies.forEach(other=>{
+        if(other===b||!other.started)return;
+        const dx=b.x-other.x,dy=b.y-other.y,dist=Math.hypot(dx,dy);
+        if(dist<D&&dist>0){
+          const overlap=(D-dist)/2,nx=dx/dist,ny=dy/dist;
+          b.x+=nx*overlap;b.y+=ny*overlap;other.x-=nx*overlap;other.y-=ny*overlap;
+          const dvx=b.vx-other.vx,dvy=b.vy-other.vy,dot=dvx*nx+dvy*ny;
+          if(dot<0){b.vx-=dot*nx*.6;b.vy-=dot*ny*.6;other.vx+=dot*nx*.6;other.vy+=dot*ny*.6}
+        }
+      });
+      b.el.style.transform='translate('+(b.x-RADIUS)+'px,'+(b.y-RADIUS)+'px)';
+    });
+  }
+  requestAnimationFrame(raf);
+})();
+</script>
+</body>
+</html>

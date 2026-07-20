@@ -586,7 +586,7 @@ initBlog();
   function getGround(){return getH()-RADIUS-1}
   const bodies=iconEls.map((el,i)=>({el,x:0,y:-RADIUS,vx:(Math.random()-.5)*80,vy:0,settled:false,bounces:0,release:250+i*170,started:false}));
   function initPositions(){const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i];b.el.style.left=(b.x-RADIUS)+'px';b.el.style.top=(-D)+'px'})}
-  requestAnimationFrame(()=>requestAnimationFrame(initPositions));
+  initPositions();window.addEventListener("load",initPositions,{once:true});
   window.addEventListener('resize',()=>{const W=getW();bodies.forEach((b,i)=>{b.x=W*START_X_PCT[i]});initPositions()},{passive:true});
   let triggerTime=null;
   const observer=new IntersectionObserver((entries)=>{
