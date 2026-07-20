@@ -22,6 +22,7 @@
     :root{
       --bg:#050505;--surface:#0D0D0D;--border:#1E1E1E;--text:#F0EBE1;--dim:#555;
       --lime:#C3FF00;--nav-h:72px;--ease:cubic-bezier(0.22,1,0.36,1);
+    }
     *{cursor:none}
     #cursor{position:fixed;top:0;left:0;width:12px;height:12px;background:var(--lime);border-radius:50%;border:1.5px solid transparent;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),background .2s,border-color .2s;will-change:left,top}
     #cursor.hover{width:38px;height:38px;background:transparent;border-color:var(--lime)}
@@ -168,20 +169,21 @@
       #story .section-inner{flex-direction:column;gap:2rem}
     }
     @media(max-width:600px){
-      .section{padding:4.5rem 1.5rem}
+      .section{padding:4rem 1.5rem}
       .about-hero-h1{font-size:clamp(2.4rem,11vw,4rem)}
-      section.section,#story .section{padding:4.5rem 1.5rem}
+      section.section,#story .section{padding:4rem 1.5rem}
       .team-grid{grid-template-columns:1fr}
       /* About us + Mission mobile layout */
-      .about-grid{gap:2.25rem}
+      .about-grid{gap:0}
       .about-tag{margin-bottom:1.25rem}
-      .about-h2{font-size:clamp(1.65rem,7vw,2.4rem);margin-bottom:1rem;line-height:1.1}
-      .about-body{font-size:.9rem;line-height:1.75;margin-bottom:1rem;max-width:100%}
-      /* Mission block: make it stand out more on mobile */
-      .mission-block{border-left-width:3px;padding-left:1.25rem;margin-bottom:2rem;padding-top:.25rem;padding-bottom:.25rem}
-      .mission-label{font-size:.68rem;margin-bottom:.65rem}
-      .mission-text{font-size:.88rem;line-height:1.8}
-      .about-link{margin-top:1.25rem}
+      .about-h2{font-size:clamp(1.75rem,7.5vw,2.6rem);margin-bottom:1.25rem;line-height:1.05}
+      .about-body{font-size:.92rem;line-height:1.8;margin-bottom:1.1rem;max-width:100%}
+      /* Mission block: full-width treatment on mobile */
+      #story .about-grid > div:last-child{border-top:1px solid var(--border);padding-top:2.5rem;margin-top:2.5rem}
+      .mission-block{border-left:none;border-top:2px solid var(--lime);padding-left:0;padding-top:1.25rem;margin-bottom:1.5rem;background:rgba(195,255,0,.03);padding-right:0}
+      .mission-label{font-size:.68rem;margin-bottom:.75rem;letter-spacing:.16em}
+      .mission-text{font-size:.92rem;line-height:1.85;font-style:normal;color:rgba(240,235,225,.72)}
+      .about-link{margin-top:1.5rem;font-size:.9rem}
     }
 
     /* ── Page skeleton ── */
