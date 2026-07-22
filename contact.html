@@ -177,7 +177,19 @@
 
     @media(max-width:600px){
       #social-stage{height:150px!important}
+      .home-cta-inner{padding:4rem 1.5rem}
+      .home-cta-h2{font-size:clamp(1.8rem,8vw,2.6rem)}
     }
+    /* ── Back to home band ── */
+    #home-cta{border-top:1px solid var(--border);position:relative;overflow:hidden}
+    .home-cta-blob{position:absolute;width:600px;height:600px;border-radius:50%;background:var(--lime);filter:blur(160px);opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+    .home-cta-inner{max-width:1000px;margin:0 auto;padding:6rem 2rem;text-align:center;position:relative;z-index:2}
+    .home-cta-kicker{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:1.25rem}
+    .home-cta-h2{font:800 clamp(2.2rem,5vw,3.6rem)/1.05 'Syne',sans-serif;letter-spacing:-.03em;margin-bottom:1rem}
+    .home-cta-sub{font-size:1rem;color:var(--dim);max-width:46ch;margin:0 auto 2.5rem;line-height:1.7;font-weight:300}
+    .btn-home{display:inline-flex;align-items:center;gap:.55rem;background:var(--lime);color:#050505;font:700 1rem/1 'Syne',sans-serif;letter-spacing:-.01em;padding:1rem 2.5rem;border-radius:100px;transition:transform .2s var(--ease),box-shadow .2s}
+    .btn-home:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(195,255,0,.3)}
+    .btn-home svg{transform:rotate(180deg)}
   </style>
 </head>
 <body>
@@ -316,6 +328,16 @@
     </form>
   </div>
 </div>
+
+<section id="home-cta">
+  <div class="home-cta-blob" aria-hidden="true"></div>
+  <div class="home-cta-inner">
+    <div class="home-cta-kicker">Not ready yet?</div>
+    <h2 class="home-cta-h2">Take another look around.</h2>
+    <p class="home-cta-sub">No pressure. Head back to the start and explore what we do.</p>
+    <a href="index.html" class="btn-home"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Take me back</a>
+  </div>
+</section>
 
 <div id="social-stage" aria-label="Find us on social media">
   <span class="stage-label" aria-hidden="true">Follow us</span>
